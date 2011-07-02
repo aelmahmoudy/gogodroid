@@ -1,0 +1,24 @@
+/*
+-----------------------------------------------------------------------------
+ $Id: pal_thread.def,v 1.1 2009/11/20 16:38:47 jasminko Exp $
+-----------------------------------------------------------------------------
+Copyright (c) 2008 gogo6 Inc. All rights reserved.
+
+  For license information refer to CLIENT-LICENSE.TXT
+-----------------------------------------------------------------------------
+
+  Platform abstraction layer definition for thread functions.
+
+-----------------------------------------------------------------------------
+*/
+#ifndef __PAL_THREAD_DEF__
+#define __PAL_THREAD_DEF__
+
+
+extern sint32_t       pal_thread_create   ( pal_thread_t * id, pal_thread_funct funct, void * arg );
+
+extern sint32_t       pal_thread_exit     ( pal_thread_ret_t ret );
+
+extern sint32_t       pal_thread_join     ( pal_thread_t id, pal_thread_ret_t * ret );
+
+#endif

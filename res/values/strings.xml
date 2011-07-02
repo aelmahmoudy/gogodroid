@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GogoDroid</string>
+    <string name="app_webpage_url">http://code.google.com/p/gogodroid/</string>
+    <string name="if_running">Running ?</string>
+    <string name="config_title">Configuration (gogoc.conf)</string>
+    <string name="btn_start">Start</string>
+    <string name="btn_stop">Stop</string>
+    <string name="gogoc_started">Gogoc started.</string>
+    <string name="gogoc_stopped">Gogoc stopped.</string>
+    <string name="binary_not_exists">Gogoc binary not exist. You may need to reinstall this app.</string>
+    <string name="cant_read_conf">Cannot read gogoc.conf</string>
+    <string name="conf_not_exists">gogoc.conf not exists, use default.</string>
+    <string name="binary_installed">Gogoc binary installed.</string>
+</resources>

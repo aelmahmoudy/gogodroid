@@ -1,0 +1,80 @@
+                                                          -*- text -*-
+gogoCLIENT v1.2-RELEASE
+============================
+                                     Current Web home: http://gogo6.com/
+
+What's New
+----------
+
+Take a look at the release notes on http://gogonet.gogo6.com to know which 
+bugs have been resolved, what are the known issues and what new 
+features are included in this version:
+
+
+Description
+-----------
+
+TSP is a control protocol used to establish and maintain static 
+tunnels. The gogoCLIENT is used on the host computer to connect 
+to a tunnel broker using the TSP protocol and to get the information 
+for its tunnel. When it receives the information for the tunnel, the 
+gogoCLIENT creates the static tunnel on its operating system.
+
+The gogoCLIENT code is mostly identical for all client platforms.
+However, creating the static tunnel is operating system dependent and 
+is done by a script called by the gogoCLIENT. These scripts are 
+located under the template directory in the gogoCLIENT 
+installation directory.
+
+The script executed by the gogoCLIENT to configure the tunnel 
+interface is customized for each type of supported operating system 
+and takes care of all specifics for the target operating system. 
+On Unix systems, it is a shell script. This separation of the binary 
+and script enables fast and easy additions of new operating systems, 
+as has been shown by the community contributions for many operating 
+systems.
+
+Packaging
+---------
+
+The gogoCLIENT is available either as part of the operating system
+distributions, such as Linux or FreeBSD; as downloadable software from 
+the Web site of the tunnel broker service, such as Freenet6 
+(http://gogonet.gogo6.com); as included in the gogoSERVER CD-ROM; or directly 
+from gogo6 (http://www.gogo6.com).
+
+Multi-site operation
+--------------------
+
+The gogoCLIENT may be used to connect to a single gogoSERVER 
+or to multiple servers across different locations. This serves two 
+purposes: providing better quality of service by having users connect 
+to the closest server and also provide redundancy if one site is 
+unavailable. The mechanism used by TSP to announce multiple sites is 
+called a broker list or broker redirection (in the case there's only 
+one element in the list). The client receiving a broker list will test 
+which sites are available and their respective topological distance 
+using echo messages. The client then connects to each broker in the 
+list, the closest one first, until a successful connection is 
+established.
+
+
+Executing the gogoCLIENT
+-----------------------------
+
+The gogoCLIENT is executed manually by typing the command gogoc. 
+If no keepalive is negotiated, the gogoCLIENT program exits after 
+setting up the tunnel. If the keepalive mechanism is negotiated, the 
+gogoCLIENT forks itself and runs in the background to carry the 
+keepalive with the tunnel broker. Keepalives are mandatory for IPv6 in 
+UDP IPv4 tunnels to keep the NAT mapping up, but are optional for IPv6
+in IPv4 tunnels and IPv4 in IPv6 tunnels.
+
+
+Please report bugs in the gogoCLIENT on http://gogonet.gogo6.com.
+
+MAINTAINER: gogo6, inc (http://www.gogo6.com/)
+
+Copyright (C) 2010 gogo6, inc.
+
+See CLIENT-LICENSE.TXT for license information.

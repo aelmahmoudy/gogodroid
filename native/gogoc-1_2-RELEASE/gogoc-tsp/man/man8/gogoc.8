@@ -1,0 +1,111 @@
+.\"
+.\"  Copyright (c) 2007 gogo6 Inc. All rights reserved.
+.\"
+.\"  For license information refer to CLIENT-LICENSE.TXT
+.\"
+.\" $Id: gogoc.8,v 1.5 2010/03/12 22:34:10 jasminko Exp $
+.\"
+.Dd May 7, 2007
+.Dt GOGOC 8
+.Os gogoCLIENT
+.Sh NAME
+.Nm gogoc
+.Nd gogoCLIENT
+.Sh SYNOPSIS
+.Nm gogoc
+.Op Fl h
+.Op Fl ?\&
+.Op Fl y
+.Op Fl n
+.Op Fl b\&
+.Nm gogoc
+.Op Fl f Ar config_file
+.Op Fl i Ar interface_name
+.Op Fl u Ar interface_name
+.Op Fl s Ar interface_name
+.Op Fl r Ar retry_delay
+.Sh DESCRIPTION
+.Nm gogoc
+provides a means to configure a tunnel obtained from a tunnel server that supports 
+the tunnel setup protocol (TSP).
+.Nm gogoc
+will connect to a tunnel server and request a tunnel according to the specifications 
+given in the configuration file.  As a background process, it will then monitor the 
+state of the tunnel.  In the event of a timeout, gogoc will establish a new tunnel.
+.Pp
+.Nm gogoc
+currently supports three types of tunnels:  
+.Pp
+.Bl -tag -width 
+.It Sy - v6v4 (IPv6 over IPv4)
+Supported on FreeBSD, NetBSD, OpenBSD, Linux, Windows, Solaris, Darwin and OpenWRT.
+.Pp
+.It Sy - v6udpv4 (IPv6 over UDP over IPv4)
+Supported on FreeBSD, Linux, Windows, Darwin and OpenWRT.
+.Pp
+.It Sy - v4v6 (IPv4 over IPv6 (DSTM))
+Supported on FreeBSD and Windows.
+.Pp
+.El
+.Sh ARGUMENTS
+The following options are available:
+.Bl -tag -width indent
+.It Fl h, ?\&
+Displays a short usage summary and quits.
+.Pp
+.It Fl y\&
+Automatically accept server's public key.
+.Pp
+.It Fl n\&
+Run as a foreground process.
+.Pp
+.It Fl b\&
+Stop trying to reconnect upon first error received.
+.Pp
+.It Fl f Ar configuration_file
+Specifies a different configuration file.  
+.br
+Default is /etc/gogoc/gogoc.conf. 
+.Pp
+.It Fl s Ar interface_name
+Overrides 
+.Nm client_v4 
+in 
+.Xr gogoc.conf 5 
+.Pp
+.It Fl i Ar interface_name
+Overrides 
+.Nm if_tunnel_v6v4 
+in 
+.Xr gogoc.conf 5 
+.Pp
+.It Fl u Ar interface_name
+Overrides 
+.Nm if_tunnel_v6udpv4 
+in 
+.Xr gogoc.conf 5 
+.Pp
+.It Fl r Ar retry_delay
+Overrides
+.Nm retry_delay
+in
+.Xr gogoc.conf 5
+.Pp
+.El
+.Sh SEE ALSO
+.Xr gogoc.conf 5
+.br
+http://www.gogo6.com
+.Sh ACKNOWLEDGMENT
+This software uses code taken from other organizations as :
+.Bl -tag -width indent
+.It - Ar "RSA data security for md5."
+.It - Ar "The Apache Software Foundation for Base64 encoding and decoding."
+.El
+.Sh AUTHORS
+gogo6 Inc.
+.br
+http://www.gogo6.com
+.br
+support@gogo6.com
+.br

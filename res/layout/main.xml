@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" android:padding="6px" android:scrollbarAlwaysDrawVerticalTrack="false">
+
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="20px" android:text="@string/app_name"></TextView>
+
+<LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent">
+	<CheckBox android:layout_height="wrap_content" android:id="@+id/Running" android:checked="false" android:layout_width="wrap_content" android:layout_weight="1.0" android:clickable="false" android:text="@string/if_running"></CheckBox>
+</LinearLayout>
+
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/ConfText" android:text="@string/config_title"></TextView>
+<EditText android:layout_width="fill_parent" android:singleLine="false" android:scrollHorizontally="false" android:scrollbarStyle="insideOverlay" android:scrollbarAlwaysDrawVerticalTrack="false" android:layout_height="wrap_content" android:typeface="monospace" android:textSize="12px" android:layout_weight="1.0" android:gravity="top" android:id="@+id/GogocConf"></EditText>
+
+<LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:orientation="horizontal">
+	<Button android:layout_height="wrap_content" android:id="@+id/ButtonStart" android:text="@string/btn_start" android:layout_width="100px"></Button>
+	<Button android:layout_height="wrap_content" android:id="@+id/ButtonStop" android:text="@string/btn_stop" android:layout_width="100px"></Button>
+</LinearLayout>
+
+
+
+
+</LinearLayout>

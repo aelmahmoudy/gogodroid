@@ -1,0 +1,26 @@
+/*
+-----------------------------------------------------------------------------
+ $Id: pal_socket.def,v 1.1 2009/11/20 16:38:47 jasminko Exp $
+-----------------------------------------------------------------------------
+Copyright (c) 2007 gogo6 Inc. All rights reserved.
+
+  For license information refer to CLIENT-LICENSE.TXT
+-----------------------------------------------------------------------------
+
+  Platform abstraction layer definition for socket functions.
+
+-----------------------------------------------------------------------------
+*/
+#ifndef __PAL_SOCKET_DEF__
+#define __PAL_SOCKET_DEF__
+
+
+extern pal_socket_t   pal_socket       ( sint32_t af, sint32_t type, sint32_t proto );
+
+extern sint32_t       pal_connect      ( pal_socket_t sockfd, const struct sockaddr *serv_addr, sint32_t addrlen );
+
+extern sint32_t       pal_shutdown     ( pal_socket_t s, sint32_t how );
+
+extern sint32_t       pal_closesocket  ( pal_socket_t s );
+
+#endif

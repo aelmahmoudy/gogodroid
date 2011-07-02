@@ -1,0 +1,26 @@
+/*
+-----------------------------------------------------------------------------
+ $Id: pal_unistd.def,v 1.1 2009/11/20 16:38:48 jasminko Exp $
+-----------------------------------------------------------------------------
+Copyright (c) 2007 gogo6 Inc. All rights reserved.
+
+  For license information refer to CLIENT-LICENSE.TXT
+-----------------------------------------------------------------------------
+
+  Platform abstraction layer definition for unistd functions.
+
+-----------------------------------------------------------------------------
+*/
+#ifndef __PAL_UNISTD_DEF__
+#define __PAL_UNISTD_DEF__
+
+
+extern char*          pal_getcwd          ( char* buf, uint32_t size );
+
+extern sint32_t       pal_chdir           ( const char* path );
+
+extern void           pal_sleep           ( const uint32_t usec );
+
+extern sint32_t       pal_unlink          ( const char* pathname );
+
+#endif

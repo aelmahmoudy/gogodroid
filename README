@@ -1,0 +1,24 @@
+#########################################################################
+#		GogoDroid - Android Gogoc client			#
+# Ported to Android by Liu DongMiao <liudongmiao@gmail.com>		#
+# GUI part wrote by Mariotaku Lee <mariotaku.lee@gmail.com>		#
+# Special thanks to:							#
+# gogoc-android		https://github.com/liudongmiao/gogoc-android/	#
+# rsyncdroid		http://code.google.com/p/rsyncdroid		#
+# Droid VNC Server	https://github.com/oNaiPs/droid-VNC-server/	#
+# DroidSSHd		https://github.com/mestre/droidsshd/		#
+# This project is licensed under GNU Gernel Public License (V2)		#
+# Use it at your own risk!						#
+#########################################################################
+
+Only 4 simple step to build this project.
+
+Requirements:
+1. Android NDK
+2. Eclipse with Android SDK plugin
+
+How to build:
+1. Change working directory to here
+2. Run "ndk-build"
+3. Import this project to Eclipse (3.5 recommand)
+4. Build project, Android package is in bin/ Directory

@@ -1,0 +1,370 @@
+.\"
+.\"  Copyright (c) 2007 gogo6 Inc. All rights reserved.
+.\"
+.\"  For license information refer to CLIENT-LICENSE.TXT
+.\"
+.\" $Id: gogoc.conf.5,v 1.2 2010/03/12 22:03:36 jasminko Exp $
+.\"
+.\"Th Tunnel Setup Protocol client: File formats manual
+.Dd May 7, 2007
+.Dt GOGOC.CONF 5
+.Os BSD 4.2
+.Sh NAME
+.Nm gogoc.conf
+.Nd gogoCLIENT Configuration File
+.Sh SYNOPSIS
+The gogoCLIENT
+.Xr gogoc 8
+is a client program which enables a host to query a tunnel server to establish
+a tunnel between the host and the server using the TSP protocol. The gogoc 
+configuration file contains information that is read by 
+.Xr gogoc 8
+for specific details regarding the server and the tunnel to be established.
+.Pp
+.Sh FILE FORMAT
+This file is designed to be human readable and may be edited with any text
+editor. The file consists of tokens and values, which are separated by the
+equal sign. Each "Token=Value" pair must be on their own line.
+.Pp
+The different configuration directives(or options) are grouped in the following 
+sections:
+.Sh BASIC CONFIGURATION
+.Bl -tag -width -compact
+.It Sy userid
+The userid is used for authentication with the server. The TSP protocol supports 
+both anonymous and authenticated tunnels. Refer to the server policies for 
+supported modes and related Services, as well as for how to register your user 
+name. The syntax to use is given below:
+.Pp
+userid=user_name
+.Pp
+This variable is MANDATORY if you are using an authenticated tunnel. Leave empty
+if you are using anonymous access.
+.It Sy passwd
+passwd=your_password
+.Pp
+Leave empty if you are using anonymous access.
+.It Sy server
+Name and port number of the tunnel server. This variable is used to specify the
+gogoSERVER to be queried. An IPv4 or IPv6 address or FQDN (Fully Qualified
+Domain Name) can be used. The port number is optional. The default TSP port is 3653.
+.Pp
+server=host[:port]
+.Pp
+server=broker.freenet6.net
+.Pp
+server=192.168.1.1:3653
+.Pp
+This variable is MANDATORY.
+.It Sy auth_method
+The tunnel negotiation authentication method. If you are using anonymous access,
+enter `anonymous' here. Otherwise, choose one of the following authentication
+methods: any|digest-md5|passdss-3des-1|plain
+.Pp
+.Pa anonymous
+sends no username or password.
+.Pp
+.Pa any 
+is the preferred one. The most secure mechanism common to the client 
+and the broker will be used.  
+.Pp
+.Pa digest-md5 
+sends the username in clear text, but not the password.  
+.Pp
+.Pa passdss-3des-1
+sends the username in clear text, but not the password.  
+.Pp
+.Pa plain 
+sends both username and password in clear text.  
+.Pp
+Default: any
+.El
+.Sh ROUTER CONFIGURATION
+.Bl -tag -width -compact
+.It Sy host_type
+Set the value of this directive to `router' to configure the machine as a 
+router. By doing so, you will be given a prefix to advertise on a local 
+interface.
+.Pp
+host_type=host|router
+.Pp
+Default: host
+.Pp
+.It Sy prefixlen
+prefixlen specifies the required prefix length for the gogoCLIENT
+network. Valid values range from 0 to 64; however, values are usually between 
+48 and 64.
+.Pp
+Default: 64
+.Pp
+.It Sy if_prefix
+if_prefix is the name of the OS interface that will be configured
+with the first /64 of the received prefix from the broker. The
+router advertisement daemon is started to advertise this prefix
+on the if_prefix interface.
+.Pp
+.It Sy dns_server
+This directive specifies the DNS servers that should be used for reverse DNS 
+delegation of the prefix allocated.
+.Pp
+Syntax is:
+.Pp
+dns_server=fqdn[:fqdn]...
+.Pp
+For example, to set ns1.example.net and ns2.example.net as authoritative DNS
+servers for reverse DNS of the prefix, this line would be used in gogoc.conf:
+.Pp
+dns_server=ns1.example.net:ns2.example.net
+.Pp
+NOTE: Never use an IP address as a DNS server name.
+.El
+.Sh ADVANCED CONFIGURATION
+.Bl -tag -width -compact
+.It Sy tunnel_mode
+The tunnel encapsulation mode. It can take the following values:
+.Pp
+.Pa v6anyv4
+This mode lets the broker determine whether or not the gogoCLIENT is behind
+a NAT. The broker will then inform the gogoCLIENT which tunnel mode to use:
+v6v4 or v6udpv4.
+.Pp
+.Pa v6v4
+Explicitly requests an IPv6-in-IPv4 tunnel.
+.Pp
+.Pa v6udpv4
+Explicitly requests an IPv6-in-UDP-IPv4 tunnel (for clients behind a NAT).
+This type of tunnel is supported under Linux, FreeBSD and Windows.
+.Pp
+.Pa v4v6
+Explicitly requests an IPv4-in-IPv6 tunnel (for dual-stack transition mechanism).
+.Pp
+Default: v6anyv4
+.It Sy auto_retry_connect
+This directive is used when a keepalive timeout or similar error occurred,
+resulting in a loss of connectivity with the tunnel endpoint. If you wish the
+gogoCLIENT to re-establish connectivity with tunnel endpoint when such an
+error occurs, set this variable to `yes'.
+.Pp
+auto_retry_connect=yes|no
+.Pp
+Default: yes
+.It Sy retry_delay
+The retry_delay directive is used to set the number of seconds to sleep before
+reattempting to establish a tunnel with the gogoSERVER. It will retry until 
+it succeeds, unless you have set the auto_retry_connect variable to `no'.
+.Pp
+Default: 30
+.Pp
+.It Sy keepalive 
+keepalive indicates that this client will send keepalive packets to maintain
+tunnel activity and detect inactive tunnels (if no response is received from the
+server). This directive must be set to `yes' when using v6udpv4 tunnels to keep 
+the NAT entry active.
+.Pp
+keepalive=yes|no
+.Pp
+Default: yes
+.Pp
+.It Sy keepalive_interval
+The keepalive_interval is a suggestion from the gogoCLIENT to the
+broker for the interval to wait between sending keepalive messages. The broker
+may impose a different interval value to the client if the suggested value is 
+too low.
+.Pp
+keepalive_interval=30
+.Pp
+Default: 30
+.Pp
+.It Sy if_tunnel_v6v4
+The logical interface name that will be used for the configured tunnel (IPv6 over
+IPv4). The syntax is:
+.Pp
+if_tunnel_v6v4=name
+.Pp
+Under *BSD: gif0
+.Pp
+Under Linux: sit0
+.Pp
+Under Windows: 2
+.Pp
+This variable is MANDATORY.
+.It Sy if_tunnel_v6udpv4
+The logical interface name that will be used for v6udpv4 tunnels (IPv6 over
+UDPv4). The syntax is:
+.Pp
+if_tunnel_v6udpv4=name
+.Pp
+Under FreeBSD: tun1
+.Pp
+Under Linux: tun
+.Pp
+Under Windows: tunv6
+.Pp
+.It Sy if_tunnel_v4v6
+The logical interface name that will be used for v4v6 tunnels (IPv4 over IPv6).
+The syntax is:
+.Pp
+if_tunnel_v4v6=name
+.It Sy gogoc_dir
+The directory where the gogoCLIENT program is installed. Binaries, manual
+pages, this configuration file and templates are all located in this directory.
+This variable may resemble the following:
+.Pp
+gogoc_dir=/usr/local/gogoc
+.Pp
+This variable is MANDATORY.
+.It Sy template
+This directive indicates which configuration template must be used when 
+configuring the tunnel. The configuration template is a script file, located in
+the template directory of the package, that contains the system commands to be
+executed for tunnel setup. The directives are passed to the script file as
+environment variables. The template directive is normally set when the package
+is built for the specific operating system. View the contents of the template 
+directory to learn which ones are available. The template name must be the file 
+name without the .sh or .cmd suffix.
+.Pp 
+template=linux
+.Pp
+This variable is MANDATORY.
+.It Sy proxy_client
+The proxy_client directive indicates that this client acts as a TSP proxy for
+a remote client tunnel endpoint machine. It is set to `yes' if the machine 
+running the gogoCLIENT requests a tunnel for another machine. (e.g.: cisco 
+template).  This directive must be used in conjunction with a static IPv4
+address assigned to the client_v4 variable.
+.Pp
+NOTE: proxy_client=yes is incompatible with tunnel_mode=v6udpv4
+.Pp
+Default: no
+.It Sy client_v4
+The IPv4 address of the client tunnel endpoint. If the host has more than one
+IPv4 address, it is recommended to manually set this variable with its local
+IPv4 address as the value. If set to auto, it chooses the source IP address used 
+when communicating with the server. This variable may resemble the following:
+.Pp
+client_v4=auto|a.b.c.d
+.Pp
+Default: auto
+.It Sy client_v6
+This directive is similar te client_v4, except that this one is for users that 
+have enabled IPv4 in IPv6 encapsulation (i.e., DSTM).
+.Pp
+client_v6=auto|XX:XX::XX:XX
+.Pp
+Default: auto
+.It Sy broker_list
+The 'broker_list' directive specifies the name of the file where the broker 
+list received during broker redirection will be saved.
+.Pp
+Default: tsp-broker-list.txt
+.It Sy last_server
+The 'last_server' directive specifies the name of the file
+where the address of the last broker to which a connection
+was successfully established will be saved.
+.Pp
+Default: tsp-last-server.txt
+.It Sy always_use_same_server
+The value of the 'always_use_same_server' directive determines whether the 
+client should always try to connect to the broker specified by the 'last_server' 
+directive (if any).
+.Pp
+Default: no
+.El
+.Sh LOGGING CONFIGURATION
+.Bl -tag -width -compact
+.It Sy log_file
+This directive is used to specify the quantity of information that will be 
+logged to the file. Values range inclusively from 0 (no logging) to 3 (full 
+logging).
+.Pp
+Default: 0
+.It Sy log_stderr
+This directive is used to specify the quantity of information that will be 
+logged to the standard error device. Values range inclusively from 0 (no 
+logging) to 3 (full logging).
+.Pp
+Default: 1
+.It Sy log_console
+This directive is used to specify the quantity of information that will be
+logged to the console. Values range inclusively from 0 (no logging) to 3 (full
+logging).
+.Pp
+Default: 0
+.It Sy log_syslog
+This directive is used to specify the quantity of information that will be
+logged to the syslog. Values range inclusively from 0 (no logging) to 3 (full
+logging).
+.Pp
+Default: 0
+.It Sy log_filename
+When logging to file is requested via the 'log_file' directive, the name and 
+path of the file to use may be specified using the 'log_filename' directive.
+.Pp
+log_filename=[/path/to/the/]file
+.Pp
+Default: gogoc.log
+.Pp
+.It Sy log_rotation
+When logging to file is requested via the 'log_file' directive, log file 
+rotation may be enabled using the 'log_rotation' directive.
+.Pp
+When enabled, the contents of the log file will be moved to a backup file just
+before it reaches the maximum log file size specified via the 
+ `log_rotation_size' directive.
+.Pp
+The name of the backup file is the name of the original log file with 
+`.<timestamp>' inserted before the file extension. If the file does not have 
+an extension, `.<timestamp>' is appended to the name of the original log file. The
+timestamp specifies when the rotation occurred.
+.Pp
+After the contents of the log file have been moved to the backup file, the 
+original file is cleared, and logging resumes at the beginning of the file.
+.Pp
+log_rotation=yes|no
+.Pp
+Default: yes
+.Pp
+.It Sy log_rotation_size
+The `log_rotation_size' directive specifies the maximum size a log file may 
+reach before rotation occurs (if rotation has been enabled via the 
+'log_rotation' directive).
+.Pp
+The value is expressed in kilobytes.
+.Pp
+log_rotation_size=16|32|128|1024
+.Pp
+Default value: 32
+.Pp
+.It Sy log_rotation_delete
+The `log_rotation_delete' directive specifies that the log file will be recycled
+on rotation. No backup log files will be kept. (if rotation has been enabled via 
+the 'log_rotation' directive).
+.Pp
+log_rotation_delete=yes|no
+.Pp
+Default: no
+.Pp
+.It Sy syslog_facility
+When logging to syslog is requested using the `log' directive, the facility to
+use may be specified using the `syslog_facility' directive.
+.Pp
+Valid values are USER, and LOCAL[0-7].
+.Pp
+syslog_facility=FACILITY
+.Pp
+Default: USER
+.Pp
+.El
+.Sh FILES
+.Bl -tag -width <gogoc_dir>/bin/gogoc.conf -compact
+.It Pa <gogoc_dir>/bin/gogoc.conf
+.It Pa <gogoc_dir>/bin/gogoc.conf.sample
+.El
+.Sh SEE ALSO
+.Xr gogoc 8
+.Rs
+Freenet6 Web site: http://www.go6.net
+.Pp
+gogo6 Web site: http://www.gogo6.com
+.Re
+.\".Sh HISTORY

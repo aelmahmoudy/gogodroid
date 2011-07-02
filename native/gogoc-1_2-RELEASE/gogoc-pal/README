@@ -1,0 +1,31 @@
+$ Id: $
+------------------------------------------------------------------------------
+Copyright (c) 2007 gogo6 Inc.  All rights reserved.
+------------------------------------------------------------------------------
+
+This directory contains the gogoCLIENT Platform Abstraction Layer(PAL).
+
+Subdirectories:
+  .\defs\           - Contains the API definitions that the header files for
+                      the platform must conform to.
+
+  .\platform\       - Platform-specific implementation of the GOGOC PAL.
+
+  .\out_inc\        - Will contain the header files for the platform specified
+                      when `make' was invoked.
+
+  .\out_lib\        - Will contain the built gogoCLIENT Platform 
+                      Abstraction Layer library.
+
+Files:
+  .\Makefile        - Makefile to build PAL on UNIX-like platforms.
+  .\build-winpc.cmd - Command script to build PAL on Windows (XP, Vista).
+  .\build-wince.cmd - Command script to build PAL on Windows Embedded.
+
+Applications that use this library should modify the CFLAGS to add the 
+following:
+  -I<path-to-gogocpal>/defs
+  -I<path-to-gogocpal>/out_inc
+LDFLAGS:
+  -L<path-to-gogocpal>/out_lib
+  -lgogocpal

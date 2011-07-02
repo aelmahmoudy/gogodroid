@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with TunnelDroid.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  @author Mario Izquierdo (mariodebian) <mariodebian@gmail.com>
+ *  @author Mariotaku Lee (mariotaku) <mariotaku.lee@gmail.com>
  */
 package com.googlecode.gogodroid;
 
@@ -72,17 +72,56 @@ public class GogoDroid extends Activity {
         
 		btnStart = (Button) findViewById(R.id.ButtonStart);
 		btnStart.setOnClickListener(new OnClickListener() {
+		
 			public void onClick(View v) {
-				// save conf in file
-				saveConf();
-				loadModule();
-				startGogoc();
-				Log.d(LOG_TAG, "onCreate() gogoc started.");
-				changeStatus();
-				if (statusGogoc()) {
-					showMsg(R.string.gogoc_started);
+		    	String pid;
+		    	String temp;
+		    	pid = "";
+		    	int i;
+				try{
+					process = Runtime.getRuntime().exec("ps");
+					process.waitFor();
+			
+					BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+					while ( (temp = stdInput.readLine()) != null ) {
+						//Log.d(LOG_TAG, "stopGogoc() temp='"+temp+"'");
+						if ( temp.contains(GOGOC_BIN) ) {
+							Log.d(LOG_TAG, "statusGogoc() temp='"+temp+"'");
+							String [] cmdArray = temp.split(" +");
+							for (i=0; i< cmdArray.length; i++) {
+								Log.d(LOG_TAG, "loop i="+ i + " => " + cmdArray[i]);
+							}
+							pid = cmdArray[1];
+						}
+					}
 				}
-				setResult(android.app.Activity.RESULT_OK);
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+				catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+
+			    // if pid
+			    if ( pid != "") {
+			    	showMsg(R.string.gogoc_already_running);
+			    }
+			    else {
+					// save conf in file
+					saveConf();
+					// load ipv6 and tun modules
+					loadModule();
+			    	startGogoc();
+					Log.d(LOG_TAG, "onCreate() gogoc started.");
+					changeStatus();
+					if (statusGogoc()) {
+						showMsg(R.string.gogoc_started);
+					}
+					setResult(android.app.Activity.RESULT_OK);
+			    }
+
+
 			}
 
 		});
@@ -351,7 +390,7 @@ public class GogoDroid extends Activity {
 	}
 		
 		
-		public void changePermission(){
+	public void changePermission(){
 		try {
 			process = Runtime.getRuntime().exec("su -c sh");
 

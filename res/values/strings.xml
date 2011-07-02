@@ -13,4 +13,6 @@
     <string name="conf_not_exists">gogoc.conf not exists, use default.</string>
     <string name="binary_installed">Gogoc binary installed.</string>
     <string name="gogoc_already_running">Gogoc already running.</string>
+    <string name="set_dns">Set DNS</string>
+    <string name="dns_changed">DNS Changed.</string>
 </resources>

@@ -13,4 +13,6 @@
     <string name="conf_not_exists">gogoc.conf 不存在，将使用默认设置</string>
     <string name="binary_installed">Gogoc 可执行文件已安装</string>
     <string name="gogoc_already_running">Gogoc 已经在运行</string>
+    <string name="set_dns">设置DNS</string>
+    <string name="dns_changed">DNS 已设置</string>
 </resources>

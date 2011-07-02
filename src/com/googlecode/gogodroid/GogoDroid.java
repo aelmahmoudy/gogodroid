@@ -51,12 +51,15 @@ public class GogoDroid extends Activity {
 	private static final String GOGOC_CONF= "/sdcard/.gogoc/gogoc.conf";
 	private static final String GOGOC_WORKING_DIR= "/data/data/com.googlecode.gogodroid/files/";
 	private static final String GOGOC_BIN= "/data/data/com.googlecode.gogodroid/files/gogoc";
-	private Process process;
+	private static final String DNS1 = "210.51.191.217";
 	private static final String [] DEFAULT_CONF = {"server=anonymous.freenet6.net"};
+	private Process process;
+
 	
 	CheckBox CheckboxRunning;
 	Button btnStart;
 	Button btnStop;
+	Button btnDNS;
 	EditText txtBox;
 	TextView conftxt;
 	
@@ -141,6 +144,17 @@ public class GogoDroid extends Activity {
 
 		});
 		
+		btnDNS = (Button) findViewById(R.id.ButtonDNS);
+		btnDNS.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				setDNS();
+				showMsg(R.string.dns_changed);
+			}
+
+		});
+		
+		
 		//install gogoc binary
 		installBinary();
 		
@@ -155,13 +169,11 @@ public class GogoDroid extends Activity {
     public void changeStatus() {
     	if ( statusGogoc() ) {
 			CheckboxRunning.setChecked(true);
-			txtBox.setVisibility(View.INVISIBLE);
-			conftxt.setVisibility(View.INVISIBLE);
+			txtBox.setFocusable(false);
 		}
 		else {
 			CheckboxRunning.setChecked(false);
-			txtBox.setVisibility(View.VISIBLE);
-			conftxt.setVisibility(View.VISIBLE);
+			txtBox.setFocusable(true);
 		}
     	
     }
@@ -338,6 +350,25 @@ public class GogoDroid extends Activity {
     		OutputStream os = process.getOutputStream();
     		Log.d(LOG_TAG, "loadModule() cmd='modprobe ipv6 tun'");
     		writeLine( os, "modprobe ipv6 tun");
+    		os.flush();
+    		//process.waitFor();
+		}
+		catch ( IOException e ) {
+    		e.printStackTrace();
+    	}
+    	/*catch (InterruptedException e) {
+			e.printStackTrace();
+		}*/
+	}
+	
+	
+	public void setDNS(){
+		try {
+    		process = Runtime.getRuntime().exec("su -c sh");
+    		//process = Runtime.getRuntime().exec("sh");
+    		OutputStream os = process.getOutputStream();
+    		Log.d(LOG_TAG, "setDNS() cmd='setprop net.dns1' + DNS1 ");
+    		writeLine( os, "setprop net.dns1" + DNS1 );
     		os.flush();
     		//process.waitFor();
 		}

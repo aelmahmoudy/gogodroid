@@ -13,8 +13,11 @@
 <EditText android:layout_width="fill_parent" android:singleLine="false" android:scrollHorizontally="false" android:scrollbarStyle="insideOverlay" android:scrollbarAlwaysDrawVerticalTrack="false" android:layout_height="wrap_content" android:typeface="monospace" android:textSize="12px" android:layout_weight="1.0" android:gravity="top" android:id="@+id/GogocConf"></EditText>
 
 <LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:orientation="horizontal">
-	<Button android:layout_height="wrap_content" android:id="@+id/ButtonStart" android:text="@string/btn_start" android:layout_width="100px"></Button>
-	<Button android:layout_height="wrap_content" android:id="@+id/ButtonStop" android:text="@string/btn_stop" android:layout_width="100px"></Button>
+	<TableRow android:layout_width="fill_parent" android:layout_height="wrap_content">
+	<Button android:layout_height="wrap_content" android:id="@+id/ButtonStart" android:text="@string/btn_start" android:layout_weight="1"></Button>
+	<Button android:layout_height="wrap_content" android:id="@+id/ButtonStop" android:text="@string/btn_stop" android:layout_weight="1"></Button>
+		<Button android:layout_height="wrap_content" android:id="@+id/ButtonDNS" android:text="@string/set_dns" android:layout_weight="1"></Button>
+	</TableRow>
 </LinearLayout>
 
 

@@ -11,14 +11,15 @@
 # Use it at your own risk!						#
 #########################################################################
 
-Only 4 simple step to build this project.
+Only 5 simple step to build this project.
 
 Requirements:
 1. Android NDK
 2. Eclipse with Android SDK plugin
 
 How to build:
-1. Change working directory to here
+1. Change working directory to gogoc-android-port
 2. Run "ndk-build"
-3. Import this project to Eclipse (3.5 recommand)
-4. Build project, Android package is in bin/ Directory
+3. Copy native/libs/armeabi/gogoc binary to res/raw directory of this project
+4. Import this project to Eclipse (3.5 recommand)
+5. Build project, Android package is in bin/ Directory

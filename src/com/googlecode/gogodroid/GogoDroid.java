@@ -52,6 +52,8 @@ public class GogoDroid extends Activity {
 	private static final String GOGOC_WORKING_DIR= "/data/data/com.googlecode.gogodroid/files/";
 	private static final String GOGOC_BIN= "/data/data/com.googlecode.gogodroid/files/gogoc";
 	private static final String DNS1 = "210.51.191.217";
+	private static final String TUNDEV = "/dev/tun";
+	private static final String IF_INET6 = "/proc/net/if_inet6";
 	private static final String [] DEFAULT_CONF = {"server=anonymous.freenet6.net"};
 	private Process process;
 
@@ -87,7 +89,6 @@ public class GogoDroid extends Activity {
 			
 					BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
 					while ( (temp = stdInput.readLine()) != null ) {
-						//Log.d(LOG_TAG, "stopGogoc() temp='"+temp+"'");
 						if ( temp.contains(GOGOC_BIN) ) {
 							Log.d(LOG_TAG, "statusGogoc() temp='"+temp+"'");
 							String [] cmdArray = temp.split(" +");
@@ -105,16 +106,16 @@ public class GogoDroid extends Activity {
 					e.printStackTrace();
 				}
 				
-
+				// save conf in file
+				saveConf();
+				// load ipv6 and tun modules
+				loadModule();
+				
 			    // if pid
 			    if ( pid != "") {
 			    	showMsg(R.string.gogoc_already_running);
 			    }
 			    else {
-					// save conf in file
-					saveConf();
-					// load ipv6 and tun modules
-					loadModule();
 			    	startGogoc();
 					Log.d(LOG_TAG, "onCreate() gogoc started.");
 					changeStatus();
@@ -139,7 +140,6 @@ public class GogoDroid extends Activity {
 					setResult(android.app.Activity.RESULT_OK);
 				}
 				changeStatus();
-				unloadModule();
 			}
 
 		});
@@ -344,12 +344,22 @@ public class GogoDroid extends Activity {
 	
 	
 	public void loadModule(){
+		File tundev = new File (TUNDEV);
+		File if_inet6 = new File (IF_INET6);
 		try {
     		process = Runtime.getRuntime().exec("su -c sh");
     		//process = Runtime.getRuntime().exec("sh");
     		OutputStream os = process.getOutputStream();
-    		Log.d(LOG_TAG, "loadModule() cmd='modprobe ipv6 tun'");
-    		writeLine( os, "modprobe ipv6 tun");
+    		//check if /dev/tun exists
+    		if ( ! tundev.exists()){
+    			Log.d(LOG_TAG, "loadModule() cmd='modprobe tun'");
+    			writeLine( os, "modprobe tun");
+    		}
+    		//check if /proc/net/if_inet6 exists
+    		if ( ! if_inet6.exists()){
+    			Log.d(LOG_TAG, "loadModule() cmd='modprobe ipv6");
+    			writeLine( os, "modprobe ipv6");
+    		}
     		os.flush();
     		//process.waitFor();
 		}
@@ -369,25 +379,6 @@ public class GogoDroid extends Activity {
     		OutputStream os = process.getOutputStream();
     		Log.d(LOG_TAG, "setDNS() cmd='setprop net.dns1' + DNS1 ");
     		writeLine( os, "setprop net.dns1" + DNS1 );
-    		os.flush();
-    		//process.waitFor();
-		}
-		catch ( IOException e ) {
-    		e.printStackTrace();
-    	}
-    	/*catch (InterruptedException e) {
-			e.printStackTrace();
-		}*/
-	}
-	
-	
-	public void unloadModule(){
-		try {
-    		process = Runtime.getRuntime().exec("su -c sh");
-    		//process = Runtime.getRuntime().exec("sh");
-    		OutputStream os = process.getOutputStream();
-    		Log.d(LOG_TAG, "loadModule() cmd='modprobe -r ipv6 tun'");
-    		writeLine( os, "modprobe -r ipv6 tun");
     		os.flush();
     		//process.waitFor();
 		}

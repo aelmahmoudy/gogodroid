@@ -193,8 +193,8 @@ public class GogoDroid extends Activity {
 		    		process = Runtime.getRuntime().exec("su -c sh");
 		    		//process = Runtime.getRuntime().exec("sh");
 		    		OutputStream os = process.getOutputStream();
-		    		Log.d(LOG_TAG, "startGogoc() cmd='"+GOGOC_BIN +" -f " +  GOGOC_CONF+"'");
-		    		writeLine( os, GOGOC_BIN +" -f " +  GOGOC_CONF + " &");
+		    		Log.d(LOG_TAG, "startGogoc() cmd="+GOGOC_BIN +" -y -f " +  GOGOC_CONF+"");
+		    		writeLine( os, GOGOC_BIN + " -y -f " +  GOGOC_CONF );
 		    		os.flush();
 		    		//process.waitFor();
 				}
@@ -377,8 +377,8 @@ public class GogoDroid extends Activity {
     		process = Runtime.getRuntime().exec("su -c sh");
     		//process = Runtime.getRuntime().exec("sh");
     		OutputStream os = process.getOutputStream();
-    		Log.d(LOG_TAG, "setDNS() cmd='setprop net.dns1' + DNS1 ");
-    		writeLine( os, "setprop net.dns1" + DNS1 );
+    		Log.d(LOG_TAG, "setDNS() cmd=setprop net.dns1 " + DNS1 );
+    		writeLine( os, "setprop net.dns1 " + DNS1 );
     		os.flush();
     		//process.waitFor();
 		}

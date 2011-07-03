@@ -1,0 +1,30 @@
+/*
+-----------------------------------------------------------------------------
+ $Id: pal_stdlib.def,v 1.1 2009/11/20 16:38:47 jasminko Exp $
+-----------------------------------------------------------------------------
+Copyright (c) 2007 gogo6 Inc. All rights reserved.
+
+  For license information refer to CLIENT-LICENSE.TXT
+-----------------------------------------------------------------------------
+
+  Platform abstraction layer definition for stdlib functions.
+
+-----------------------------------------------------------------------------
+*/
+#ifndef __PAL_STDLIB_DEF__
+#define __PAL_STDLIB_DEF__
+
+
+extern void *         pal_malloc          ( uint32_t size );
+
+extern void           pal_free            ( void* ptr );
+
+extern sint32_t       pal_putenv          ( char* envstring );
+
+extern void           pal_srandom         ( uint32_t seed );
+
+extern sint32_t       pal_random          ( void );
+
+extern sint32_t       pal_system          ( const char* string );
+
+#endif

@@ -1,0 +1,26 @@
+/*
+-----------------------------------------------------------------------------
+ $Id: pal_criticalsection.def,v 1.1 2009/11/20 16:38:46 jasminko Exp $
+-----------------------------------------------------------------------------
+Copyright (c) 2007 gogo6 Inc. All rights reserved.
+
+  For license information refer to CLIENT-LICENSE.TXT
+-----------------------------------------------------------------------------
+
+  Platform abstraction layer definition for critical section functions.
+
+-----------------------------------------------------------------------------
+*/
+#ifndef __PAL_CRITICALSECTION_DEF__
+#define __PAL_CRITICALSECTION_DEF__
+
+
+extern sint32_t       pal_init_cs         ( pal_cs_t* cs );
+
+extern sint32_t       pal_enter_cs        ( pal_cs_t* cs );
+
+extern sint32_t       pal_leave_cs        ( pal_cs_t* cs );
+
+extern sint32_t       pal_free_cs         ( pal_cs_t* cs );
+
+#endif

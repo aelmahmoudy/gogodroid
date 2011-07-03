@@ -1,0 +1,19 @@
+/*
+-----------------------------------------------------------------------------
+ $Id: pal_inet.def,v 1.1 2009/11/20 16:38:46 jasminko Exp $
+-----------------------------------------------------------------------------
+Copyright (c) 2007 gogo6 Inc. All rights reserved.
+
+  For license information refer to CLIENT-LICENSE.TXT
+-----------------------------------------------------------------------------
+
+  Platform abstraction layer definition for inet functions.
+
+-----------------------------------------------------------------------------
+*/
+#ifndef __PAL_INET_DEF__
+#define __PAL_INET_DEF__
+
+extern sint32_t     pal_inet_pton       ( sint32_t af, const char* src, void* dst );
+
+#endif

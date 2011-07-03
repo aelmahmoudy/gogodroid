@@ -18,7 +18,7 @@ Requirements:
 2. Eclipse with Android SDK plugin
 
 How to build:
-1. Change working directory to gogoc-android-port
+1. Change working directory to gogoc-android
 2. Run "ndk-build"
 3. Copy native/libs/armeabi/gogoc binary to res/raw directory of this project
 4. Import this project to Eclipse (3.5 recommand)

@@ -1,0 +1,44 @@
+/*
+-----------------------------------------------------------------------------
+ $Id: pal_string.def,v 1.1 2009/11/20 16:38:47 jasminko Exp $
+-----------------------------------------------------------------------------
+Copyright (c) 2007 gogo6 Inc. All rights reserved.
+
+  For license information refer to CLIENT-LICENSE.TXT
+-----------------------------------------------------------------------------
+
+  Platform abstraction layer definition for string functions.
+
+-----------------------------------------------------------------------------
+*/
+#ifndef __PAL_STRING_DEF__
+#define __PAL_STRING_DEF__
+
+
+extern char*          pal_strcpy          ( char* dest, const char* src );
+
+extern char*          pal_strncpy         ( char* dest, const char* src, uint32_t n );
+
+extern uint32_t       pal_strlen          ( const char* s );
+
+extern char*          pal_strcat          ( char *dest, const char *src );
+
+extern char*          pal_strncat         ( char *dest, const char *src, uint32_t n );
+
+extern int            pal_strcasecmp      ( const char* s1, const char* s2 );
+
+extern int            pal_strncasecmp     ( const char* s1, const char* s2, uint32_t n );
+
+extern int            pal_printf          ( const char* format, ... );
+
+extern int            pal_sprintf         ( char* str, const char* format, ... );
+
+extern int            pal_snprintf        ( char* str, uint32_t size, const char* format, ... );
+
+extern int            pal_vsnprintf       ( char* str, uint32_t size, const char* format, va_list ap );
+
+extern void*          pal_memcpy          ( void* dest, const void* src, uint32_t n );
+
+extern char*          pal_strdup          ( const char* s );
+
+#endif

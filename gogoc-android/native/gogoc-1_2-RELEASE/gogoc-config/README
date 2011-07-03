@@ -1,0 +1,28 @@
+$ Id: $
+------------------------------------------------------------------------------
+Copyright (c) 2007 gogo6 Inc.  All rights reserved.
+------------------------------------------------------------------------------
+
+This directory contains the gogoCLIENT Configuration Subsystem.
+
+Subdirectories:
+
+  .\gogocconfig\     - Contains the include files of the Configuration
+                      Subsystem.
+  .\src\            - Contains the source files of the Configuration
+                      Subsystem.
+  .\lib\            - Will contain the built gogoCLIENT Configuration
+                      Subsystem library.
+  .\winbuild\       - Visual Studio project directories for winpc and wince.
+
+Files:
+  .\Makefile        - Makefile to build gogoc-config on UNIX-like platforms.
+  .\build-winpc.cmd - Command script to build gogoc-config on Windows (XP, Vista).
+  .\build-wince.cmd - Command script to build gogoc-config on Windows Embedded.
+
+Applications that use this library should modify the CFLAGS to add the 
+following:
+  -I<path-to-gogocconfig>/gogocconfig
+LDFLAGS:
+  -L<path-to-gogocconfig>/lib
+  -lgogocconfig

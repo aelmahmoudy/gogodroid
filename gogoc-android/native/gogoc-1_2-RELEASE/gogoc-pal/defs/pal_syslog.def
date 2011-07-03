@@ -1,0 +1,25 @@
+/*
+-----------------------------------------------------------------------------
+ $Id: pal_syslog.def,v 1.1 2009/11/20 16:38:47 jasminko Exp $
+-----------------------------------------------------------------------------
+Copyright (c) 2007 gogo6 Inc. All rights reserved.
+
+  For license information refer to CLIENT-LICENSE.TXT
+-----------------------------------------------------------------------------
+
+  Platform abstraction layer definition for syslog functions.
+
+-----------------------------------------------------------------------------
+*/
+#ifndef __PAL_SYSLOG_DEF__
+#define __PAL_SYSLOG_DEF__
+
+
+extern void         pal_openlog           ( const char *ident, sint32_t option, sint32_t facility );
+
+extern void         pal_syslog            ( sint32_t priority, const char *format, ... );
+
+extern void         pal_closelog          ( void );
+
+
+#endif

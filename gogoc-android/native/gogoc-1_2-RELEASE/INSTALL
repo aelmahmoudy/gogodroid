@@ -1,0 +1,125 @@
+                                                            -*- text -*-
+               gogoCLIENT Installation Procedure
+               ======================================
+
+0. Introduction
+---------------
+
+This document describes how to build the gogoCLIENT from source
+code on Unix-like systems.
+
+The preferred form of building the gogoCLIENT is to get a release
+archive and unpack it (which you have presumably done, since you are 
+reading this).
+
+Four directories will be extracted from the archive:
+  - gogoc-tsp    (The gogoCLIENT Application)
+  - gogoc-pal         (Abstraction Layer submodule)
+  - gogoc-config      (Configuration submodule)
+  - gogoc-messaging   (Messaging submodule)
+
+1. Dependencies
+---------------
+
+To build the gogoCLIENT, your system must support a Unix-like 
+command-line development environment, including the text-processing 
+utilities (sh, grep, awk, sed, etc.) and a functional GNU C and C++ 
+compiler.  On some GNU/Linux systems, this means that you will need 
+to install packages such as `gcc', `g++', `glibc-devel' 
+(or `libc6-dev') and `gmake'.  Most systems come with these packages 
+preinstalled, but it doesn't hurt to check.  If you have successfully 
+compiled other software from source, you probably have them all.
+
+In addition to the C and C++ development environment, the gogoCLIENT 
+can use a number of libraries to provide additional features, 
+such as encrypted authentication. The "external" dependencies include:
+
+  - OpenSSL -- for encryption routines.
+  - libcrypto -- for encryption routines.
+  - libpthread -- for POSIX threading.
+  - libsocket, libnsl -- for SOLARIS platforms only.
+  - GNU make.
+
+To be usable for building the gogoCLIENT, the listed libraries
+must be installed with their "development" header files.  On GNU/Linux
+systems this typically means installing the corredponsing 
+"lib<name>-devel" or "lib<name>-dev" package along with the package with
+"lib<name>".
+
+1.1 Kernel Dependencies
+-----------------------
+
+In order to make the gogoCLIENT function properly, your system
+kernel must support the following:
+
+  - Universal TUN/TAP device driver support.
+  - IPv6-In-IPv4 tunneling support.
+  - IPv4-In-IPv6 tunneling support (optional).
+  - IPv6 support.
+
+These dependencies can be directly built in your system kernel, or
+dynamically loaded modules. In the later case, make sure the modules
+are loaded when starting the gogoCLIENT.
+
+2. Configuration
+----------------
+
+As of now, no configuration script is provided. The current setting is
+generic and will, in most cases, work without modification.
+
+3. Compilation
+--------------
+
+To compile the gogoCLIENT, using the GNU make tool, move to the 
+gogoc-tsp directory and simply type the following command:
+
+> gmake(or make) [platform=<platform>] all
+
+The `platform' variable is optional and usually automaticaly detected.
+However, if you need to specify it, the possible values are:
+
+  - linux, freebsd, netbsd, openbsd, darwin, solaris, openwrt
+
+NOTE: You require the GNU make tool to interpret the makefiles correctly.
+
+Please report any problems related to configuration and compilation of 
+the gogoCLIENT on the Go6 discussion forum (http://www.go6.net) or
+by email at support@go6.net.
+
+4. Installation
+---------------
+
+After the compilation a ready-to-use `gogoc' executable should reside
+in the bin directory. The next step is to install the compiled binary
+along with its default configuration file on your system. The following
+command will install the gogoCLIENT in the /usr/local/gogoc 
+directory:
+
+> make [platform=<platform>] installdir=/usr/local/gogoc install
+
+Note that superuser privileges will probably be required to install the
+gogoCLIENT.
+
+You will probably want to edit the gogoCLIENT configuration file to
+specify your registered username, password and server . The 
+configuration file can be found in the gogoCLIENT installation `bin'
+directory.
+
+To launch the gogoCLIENT, change directory to your installation 
+`bin' directory (i.e.: /usr/local/gogoc/bin ) and type:
+
+./gogoc
+
+The following command line options are available:
+
+-y Assume yes; assume that the answer to any questions asked is yes.
+   Particularly useful for automatically adding public keys when
+   running gogoCLIENT as a service and using authenticated mode.
+   
+-n Run googCLIENT in foreground mode. Useful for debugging.
+
+-b Boot mode; stop trying to connect and exit when unable to connect.
+
+Consult the gogoc.log file to troubleshoot connection. You can enable
+more information to be printed in the log file by modifying the gogoCLIENT
+configuration file.

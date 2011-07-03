@@ -1,0 +1,26 @@
+$ Id: $
+------------------------------------------------------------------------------
+Copyright (c) 2007 gogo6 Inc.  All rights reserved.
+------------------------------------------------------------------------------
+
+This directory contains the gogoCLIENT Messaging Subsystem.
+
+Subdirectories:
+
+  .\gogocmessaging\  - Contains the include files of the Messaging Subsystem.
+  .\src\            - Contains the source files of the Messaging Subsystem.
+  .\lib\            - Will contain the built gogoCLIENT Messaging
+                      Subsystem library.
+  .\winbuild\       - Visual Studio project directories for winpc and wince.
+
+Files:
+  .\Makefile        - Makefile to build gogoc-messaging on UNIX-like platforms.
+  .\build-winpc.cmd - Command script to build gogoc-messaging on Windows (XP, Vista).
+  .\build-wince.cmd - Command script to build gogoc-messaging on Windows Embedded.
+
+Applications that use this library should modify the CFLAGS to add the 
+following:
+  -I<path-to-gogocmessaging>/gogocmessaging
+LDFLAGS:
+  -L<path-to-gogocmessaging>/lib
+  -lgogocmessaging

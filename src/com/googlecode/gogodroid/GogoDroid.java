@@ -32,6 +32,8 @@ import java.io.FileOutputStream;
 
 import android.util.Log;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -53,7 +55,6 @@ public class GogoDroid extends Activity {
 	private static final String TUNDEV = "/dev/tun";
 	private static final String IF_INET6 = "/proc/net/if_inet6";
 	private static final String [] DEFAULT_CONF = {"server=anonymous.freenet6.net"};
-	private Process process;
 
 	
 	RadioButton StatusRunning;
@@ -77,67 +78,48 @@ public class GogoDroid extends Activity {
 		btnStart.setOnClickListener(new OnClickListener() {
 		
 			public void onClick(View v) {
-		    	String pid;
-		    	String temp;
-		    	pid = "";
-		    	int i;
-				try{
-					process = Runtime.getRuntime().exec("ps");
-					process.waitFor();
-			
-					BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
-					while ( (temp = stdInput.readLine()) != null ) {
-						if ( temp.contains(GOGOC_BIN) ) {
-							Log.d(LOG_TAG, "statusGogoc() temp='"+temp+"'");
-							String [] cmdArray = temp.split(" +");
-							for (i=0; i< cmdArray.length; i++) {
-								Log.d(LOG_TAG, "loop i="+ i + " => " + cmdArray[i]);
-							}
-							pid = cmdArray[1];
+
+				//check whether device is supported, if not, show a error dialog.
+				File tundev = new File (TUNDEV);
+				File if_inet6 = new File (IF_INET6);
+				if (tundev.exists()&&if_inet6.exists()){
+					// save conf in file
+					saveConf();
+
+					// check if gogoc running
+					if ( getPid() != "") {
+						showToast(R.string.gogoc_already_running);
 						}
+					else {
+						startGogoc();
+						Log.d(LOG_TAG, "onCreate() gogoc started.");
+						changeStatus();
+						if (statusGogoc()) {
+							showToast(R.string.gogoc_started);
+							}
+						setResult(android.app.Activity.RESULT_OK);
+						}
+				}
+				else {
+					showDialog(R.string.not_supported,R.string.not_supported_details);
 					}
 				}
-				catch (IOException e) {
-					e.printStackTrace();
-				}
-				catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				
-				// save conf in file
-				saveConf();
-				// load ipv6 and tun modules
-				loadModule();
-				
-			    // if pid
-			    if ( pid != "") {
-			    	showToast(R.string.gogoc_already_running);
-			    }
-			    else {
-			    	startGogoc();
-					Log.d(LOG_TAG, "onCreate() gogoc started.");
-					changeStatus();
-					if (statusGogoc()) {
-						showToast(R.string.gogoc_started);
-					}
-					setResult(android.app.Activity.RESULT_OK);
-			    }
-
-
-			}
-
-		});
+			});
 		
 		
 		btnStop = (Button) findViewById(R.id.ButtonStop);
 		btnStop.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				if ( stopGogoc() ){
+				if ( getPid() !="" ){
+					stopGogoc();
 					showToast(R.string.gogoc_stopped);
+					changeStatus();
+					setResult(android.app.Activity.RESULT_OK);
 				}
-				changeStatus();
-				setResult(android.app.Activity.RESULT_OK);
+				else {
+					showToast(R.string.gogoc_not_running);
+				}
 			}
 
 		});
@@ -151,10 +133,12 @@ public class GogoDroid extends Activity {
 			}
 
 		});
-		
-		
+
 		//install gogoc binary
 		updateBinary();
+		
+		// load ipv6 and tun modules
+		loadModules();
 		
 		// load configuration in txtBox
 		txtBox.setText( loadConf().toString() );
@@ -201,46 +185,45 @@ public class GogoDroid extends Activity {
     }
     
     
-    public boolean stopGogoc() {
-    	String pid;
-    	String temp;
-    	pid = "";
-    	int i;
-    	try{
-    		Process process = Runtime.getRuntime().exec("ps");
-			process.waitFor();
-			
-			BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			while ( (temp = stdInput.readLine()) != null ) {
-				//Log.d(LOG_TAG, "stopGogoc() temp='"+temp+"'");
-				if ( temp.contains(GOGOC_BIN) ) {
-					Log.d(LOG_TAG, "statusGogoc() temp='"+temp+"'");
-					String [] cmdArray = temp.split(" +");
-					for (i=0; i< cmdArray.length; i++) {
-						Log.d(LOG_TAG, "loop i="+ i + " => " + cmdArray[i]);
-					}
-					pid = cmdArray[1];
-				}
+    @SuppressWarnings("static-access")
+	public void stopGogoc() {
+    	
+		Thread thread = new Thread() {
+			@Override
+			public void run() {
+				RunNative.runSuCommand("kill -9 " + getPid());
 			}
-    		
-    	}
-    	catch (IOException e) {
+		};
+		thread.start();
+		// sleep to give some time to statusGogoc to detect process
+		try{
+		  Thread.currentThread().sleep(2000);//sleep for 2000 ms
+		}
+		catch(InterruptedException e){
 			e.printStackTrace();
 		}
-	    catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	    
-	    Log.d(LOG_TAG, "statusGogoc() pid='"+pid+"'");
-	    
-	    // if pid
-	    if ( pid != "") {
-	    	Log.d(LOG_TAG, "statusGogoc() killing='"+pid+"' ...");
-	    	RunNative.runSuCommand("kill -9 " + pid);
-	    }
-	    Log.d(LOG_TAG, "statusGogoc() pid empty='"+pid+"'");
-	    return true;
     }
+
+    
+    @SuppressWarnings("static-access")
+	public void setDNS(){
+    	
+		Thread thread = new Thread() {
+			@Override
+			public void run() {
+	    		RunNative.runSuCommand("setprop net.dns1 " + DNS1 );
+			}
+		};
+		thread.start();
+		// sleep to give some time to statusGogoc to detect process
+		try{
+		  Thread.currentThread().sleep(2000);//sleep for 2000 ms
+		}
+		catch(InterruptedException e){
+			e.printStackTrace();
+		}
+
+	}
 
     
     public boolean statusGogoc() {
@@ -304,7 +287,42 @@ public class GogoDroid extends Activity {
 	}
 	
 	
-	public void loadModule(){
+	public String getPid() {
+    	String pid;
+    	String temp;
+    	pid = "";
+    	int i;
+    	try{
+    		Process process = Runtime.getRuntime().exec("ps");
+			process.waitFor();
+			
+			BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			while ( (temp = stdInput.readLine()) != null ) {
+				//Log.d(LOG_TAG, "stopGogoc() temp='"+temp+"'");
+				if ( temp.contains(GOGOC_BIN) ) {
+					Log.d(LOG_TAG, "statusGogoc() temp='"+temp+"'");
+					String [] cmdArray = temp.split(" +");
+					for (i=0; i< cmdArray.length; i++) {
+						Log.d(LOG_TAG, "loop i="+ i + " => " + cmdArray[i]);
+					}
+					pid = cmdArray[1];
+				}
+			}
+    		
+    	}
+    	catch (IOException e) {
+			e.printStackTrace();
+		}
+	    catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	    
+	    Log.d(LOG_TAG, "statusGogoc() pid='"+pid+"'");
+		return pid;
+	}
+	
+	
+	public void loadModules(){
 		File tundev = new File (TUNDEV);
 		File if_inet6 = new File (IF_INET6);
 
@@ -319,13 +337,8 @@ public class GogoDroid extends Activity {
     		RunNative.runSuCommand("modprobe ipv6");
     		}
 	}
-	
-	
-	public void setDNS(){
-    		RunNative.runSuCommand("setprop net.dns1 " + DNS1 );
-	}
-	
-	
+
+
 	public void updateBinary() {
 		File gogoc_working_folder = new File(GOGOC_DIR);
 		File gogoc_binary = new File(GOGOC_BIN);
@@ -396,6 +409,17 @@ public class GogoDroid extends Activity {
 		Log.d(LOG_TAG, "showToast() txt='"+txt+"'");
 	}
 	
+	
+	public void showDialog(int title, int massage) {
+			new AlertDialog.Builder(this)
+				.setTitle(title)
+				.setMessage(massage)
+			.setNegativeButton(R.string.button_ok, new DialogInterface.OnClickListener(){
+				public void onClick(DialogInterface di, int i) {
+				}
+			})
+			.show();
+	}
   
 }
 

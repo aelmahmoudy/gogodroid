@@ -3,11 +3,10 @@
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="fill_parent" android:padding="6px" android:scrollbarAlwaysDrawVerticalTrack="false">
 
-<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="20px" android:text="@string/app_name"></TextView>
-
-<LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent">
-	<CheckBox android:layout_height="wrap_content" android:id="@+id/Running" android:checked="false" android:layout_width="wrap_content" android:layout_weight="1.0" android:clickable="false" android:text="@string/if_running"></CheckBox>
-</LinearLayout>
+	<TableRow android:layout_height="wrap_content" android:layout_width="fill_parent">
+		<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px" android:layout_weight="2" android:text="@string/app_name"></TextView>
+		<RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/Running" android:checked="false"  android:clickable="false"></RadioButton>
+	</TableRow>
 
 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/ConfText" android:text="@string/config_title"></TextView>
 <EditText android:layout_width="fill_parent" android:singleLine="false" android:scrollHorizontally="false" android:scrollbarStyle="insideOverlay" android:scrollbarAlwaysDrawVerticalTrack="false" android:layout_height="wrap_content" android:typeface="monospace" android:textSize="12px" android:layout_weight="1.0" android:gravity="top" android:id="@+id/GogocConf"></EditText>
@@ -19,8 +18,4 @@
 		<Button android:layout_height="wrap_content" android:id="@+id/ButtonDNS" android:text="@string/set_dns" android:layout_weight="1"></Button>
 	</TableRow>
 </LinearLayout>
-
-
-
-
 </LinearLayout>

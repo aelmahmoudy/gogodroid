@@ -17,7 +17,7 @@
     <string name="dns_changed">DNS Changed.</string>
     <string name="button_ok">OK</string>
     <string name="not_supported">Not Supported</string>
-    <string name="not_supported_details">Your device is not supported.\nView <a href="http://code.google.com/p/gogodroid/">project home page</a> for details.</string>
+    <string name="not_supported_details">Your device is not supported.\nView project home page for details.\nhttp://gogodroid.googlecode.com/</string>
     <string name="not_available">IPv6 Not available.</string>
     <string name="gogoc_connecting">Connecting, please wait.</string>
     <string name="address_title">IPv6 Address</string>

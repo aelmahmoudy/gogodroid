@@ -17,7 +17,7 @@
     <string name="dns_changed">DNS 已設定</string>
     <string name="button_ok">確認</string>
     <string name="not_supported">設備不被支援</string>
-    <string name="not_supported_details">您當前使用的設備不被支援\n請在<a href="http://code.google.com/p/gogodroid/">項目主頁</a>上了解詳細信息</string>
+    <string name="not_supported_details">您當前使用的設備不被支援\n請在項目主頁上了解詳細信息。\nhttp://gogodroid.googlecode.com/</string>
     <string name="not_available">IPv6地址不可用</string>
     <string name="gogoc_connecting">正在連接，請耐心等待</string>
     <string name="address_title">IPv6 地址</string>

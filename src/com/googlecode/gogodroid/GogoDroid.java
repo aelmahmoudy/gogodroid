@@ -95,10 +95,10 @@ public class GogoDroid extends Activity {
 						showToast(R.string.gogoc_already_running);
 						}
 					else {
-						startGogoc();
-						showToast(R.string.gogoc_started);
-						Log.d(LOG_TAG, "onCreate() gogoc started.");
 						try {
+							startGogoc();
+							showToast(R.string.gogoc_started);
+							Log.d(LOG_TAG, "onCreate() gogoc started.");
 							while(true)
 							{
 								Thread.sleep(2000);
@@ -414,8 +414,6 @@ public class GogoDroid extends Activity {
 		// change permission to executable
 		Utils.runCommand("if [ ! -x " + GOGOC_BIN + " ];then chmod 755 " + GOGOC_BIN + ";fi");
 	}
-	
-	
 
 	
 	public void copyRaw(int id,String path)

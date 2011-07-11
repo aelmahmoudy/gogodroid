@@ -4,12 +4,10 @@
 	android:layout_height="fill_parent" android:padding="6px" android:scrollbarAlwaysDrawVerticalTrack="false">
 
 	<TableRow android:layout_height="wrap_content" android:layout_width="fill_parent">
-		<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="24px" android:layout_weight="2" android:text="@string/app_name"></TextView>
-		<RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/Running" android:checked="false"  android:clickable="false"></RadioButton>
+		<EditText android:singleLine="true" android:focusable="false" android:clickable="false" android:gravity="top" android:id="@+id/Address" android:layout_height="fill_parent" android:layout_weight="1" android:layout_width="fill_parent"></EditText>
+		<RadioButton android:id="@+id/Running" android:checked="false" android:focusable="false" android:clickable="false" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_gravity="center"></RadioButton>
 	</TableRow>
 
-<TextView android:layout_height="wrap_content" android:id="@+id/AddressTitle" android:text="@string/address_title" android:layout_width="fill_parent"></TextView>
-<EditText android:singleLine="true" android:focusable="false" android:clickable="false" android:gravity="top" android:id="@+id/Address" android:layout_height="wrap_content" android:layout_width="fill_parent"></EditText>
 
 <TextView android:layout_height="wrap_content" android:id="@+id/ConfText" android:text="@string/config_title" android:layout_width="fill_parent"></TextView>
 <EditText android:layout_width="fill_parent" android:singleLine="false" android:scrollHorizontally="false" android:scrollbarStyle="insideOverlay" android:scrollbarAlwaysDrawVerticalTrack="false" android:layout_height="wrap_content" android:typeface="monospace" android:textSize="12px" android:layout_weight="1.0" android:gravity="top" android:id="@+id/GogocConf"></EditText>

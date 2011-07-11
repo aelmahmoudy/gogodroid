@@ -25,7 +25,7 @@ import java.io.OutputStream;
 
 import android.util.Log;
 
-public class RunNative {
+public class Utils {
     
 	private static final String LOG_TAG = "Gogoc";
 

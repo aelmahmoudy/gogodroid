@@ -97,9 +97,19 @@ public class GogoDroid extends Activity {
 					else {
 						startGogoc();
 						Log.d(LOG_TAG, "onCreate() gogoc started.");
-						changeStatus();
+						try{
+							do {
+								getAddress();
+								Thread.sleep(2000);	
+							}
+							while(getAddress() != true);
+						}catch (Exception e) {
+							e.printStackTrace();
+						}
+						showToast(R.string.gogoc_started);
 						setResult(android.app.Activity.RESULT_OK);
 						}
+					changeStatus();
 				}
 				else {
 					showDialog(R.string.not_supported,R.string.not_supported_details);
@@ -115,6 +125,7 @@ public class GogoDroid extends Activity {
 				if ( getPid() !="" ){
 					stopGogoc();
 					changeStatus();
+					showToast(R.string.gogoc_stopped);
 					setResult(android.app.Activity.RESULT_OK);
 				}
 				else {
@@ -149,17 +160,17 @@ public class GogoDroid extends Activity {
     
     
     public void changeStatus() {
-    	if ( statusGogoc()&&!getAddress() ) {
-			StatusRunning.setPressed(true);
-			gogocConfig.setFocusable(false);
-			currentIP.setText( R.string.gogoc_connecting );
-		}
-    	else if ( statusGogoc()&&getAddress() ) {
+    	
+    	if ( getAddress() ){
 			StatusRunning.setPressed(false);
 			StatusRunning.setChecked(true);
 			gogocConfig.setFocusable(false);
     	}
-		else {
+    	else if ( statusGogoc() ) {
+			StatusRunning.setPressed(true);
+			gogocConfig.setFocusable(false);
+		}
+    	else {
 			StatusRunning.setChecked(false);
 			gogocConfig.setFocusable(true);
 			currentIP.setText( R.string.not_available );
@@ -178,7 +189,7 @@ public class GogoDroid extends Activity {
 		Thread thread = new Thread() {
 			@Override
 			public void run() {
-				RunNative.runSuCommand(GOGOC_BIN + " -y -f " + GOGOC_CONF);
+				Utils.runSuCommand(GOGOC_BIN + " -y -f " + GOGOC_CONF);
 			}
 		};
 		thread.start();
@@ -198,7 +209,7 @@ public class GogoDroid extends Activity {
 		Thread thread = new Thread() {
 			@Override
 			public void run() {
-				RunNative.runSuCommand("kill -9 " + getPid());
+				Utils.runSuCommand("kill -9 " + getPid());
 			}
 		};
 		thread.start();
@@ -218,7 +229,7 @@ public class GogoDroid extends Activity {
 		Thread thread = new Thread() {
 			@Override
 			public void run() {
-	    		RunNative.runSuCommand("setprop net.dns1 " + DNS1 );
+	    		Utils.runSuCommand("setprop net.dns1 " + DNS1 );
 			}
 		};
 		thread.start();
@@ -366,12 +377,12 @@ public class GogoDroid extends Activity {
 		//check if /proc/net/if_inet6 exists
 		if ( ! tundev.exists()){
 			Log.d(LOG_TAG, "loadModule() cmd='modprobe tun'");
-			RunNative.runSuCommand("modprobe tun");
+			Utils.runSuCommand("modprobe tun");
 			}
 		//check if /proc/net/if_inet6 exists
     	if ( ! if_inet6.exists()){
     		Log.d(LOG_TAG, "loadModule() cmd='modprobe ipv6");
-    		RunNative.runSuCommand("modprobe ipv6");
+    		Utils.runSuCommand("modprobe ipv6");
     		}
 	}
 
@@ -394,7 +405,7 @@ public class GogoDroid extends Activity {
 		}
 		
 		// change permission to executable
-		RunNative.runCommand("if [ ! -x " + GOGOC_BIN + " ];then chmod 755 " + GOGOC_BIN + ";fi");
+		Utils.runCommand("if [ ! -x " + GOGOC_BIN + " ];then chmod 755 " + GOGOC_BIN + ";fi");
 	}
 	
 	
@@ -421,7 +432,7 @@ public class GogoDroid extends Activity {
 	
     public void setPermission(String file, String mode)
     {
-        RunNative.runCommand("chmod "+ mode + " " + file);
+        Utils.runCommand("chmod "+ mode + " " + file);
     }
 	
 	
@@ -449,15 +460,16 @@ public class GogoDroid extends Activity {
 	}
 	
 	
-	public void showDialog(int title, int massage) {
+	public void showDialog(int title, int message) {
 			new AlertDialog.Builder(this)
 				.setTitle(title)
-				.setMessage(massage)
-			.setNegativeButton(R.string.button_ok, new DialogInterface.OnClickListener(){
+				.setMessage(message)
+				.setNegativeButton(R.string.button_ok, new DialogInterface.OnClickListener(){
 				public void onClick(DialogInterface di, int i) {
 				}
 			})
 			.show();
 	}
+	
 	
 }

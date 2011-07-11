@@ -96,17 +96,20 @@ public class GogoDroid extends Activity {
 						}
 					else {
 						startGogoc();
+						showToast(R.string.gogoc_started);
 						Log.d(LOG_TAG, "onCreate() gogoc started.");
-						try{
-							do {
-								getAddress();
-								Thread.sleep(2000);	
-							}
-							while(getAddress() != true);
-						}catch (Exception e) {
+						try {
+							while(true)
+							{
+								Thread.sleep(2000);
+								if(getAddress())
+									break;
+								}
+						}
+						catch (Exception e) {
 							e.printStackTrace();
 						}
-						showToast(R.string.gogoc_started);
+						showToast(R.string.connection_established);
 						setResult(android.app.Activity.RESULT_OK);
 						}
 					changeStatus();
@@ -153,6 +156,9 @@ public class GogoDroid extends Activity {
 		
 		// load configuration in gogocConfig
 		gogocConfig.setText( loadConf().toString() );
+		
+		// save configuration
+		saveConf();
 		
 		// change gogodroid status
 		changeStatus();
@@ -399,9 +405,10 @@ public class GogoDroid extends Activity {
 		}
 		
 		// install gogoc binary
-		if(!gogoc_binary.equals(R.raw.gogoc))
+		if(!gogoc_binary.exists())
 		{
 			copyRaw(R.raw.gogoc, (GOGOC_BIN));
+			showToast(R.string.binary_installed);
 		}
 		
 		// change permission to executable

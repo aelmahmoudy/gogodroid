@@ -10,7 +10,7 @@
     <string name="gogoc_stopped">Gogoc stopped.</string>
     <string name="binary_not_exists">Gogoc binary not exist. You may need to reinstall this app.</string>
     <string name="cant_read_conf">Cannot read gogoc.conf</string>
-    <string name="conf_not_exists">gogoc.conf not exists, use default.</string>
+    <string name="conf_not_exists">config not exist, use default.</string>
     <string name="binary_installed">Gogoc binary installed.</string>
     <string name="gogoc_already_running">Gogoc already running.</string>
     <string name="gogoc_not_running">Gogoc is not running.</string><string name="set_dns">Set DNS</string>
@@ -21,5 +21,6 @@
     <string name="not_available">IPv6 Not available.</string>
     <string name="gogoc_connecting">Connecting, please wait.</string>
     <string name="address_title">IPv6 Address</string>
+    <string name="connection_established">Connection established</string>
     
 </resources>

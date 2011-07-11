@@ -3,7 +3,7 @@
     <string name="app_name">GogoDroid</string>
     <string name="app_webpage_url">http://code.google.com/p/gogodroid/</string>
     <string name="if_running">Running ?</string>
-    <string name="config_title">Configuration (gogoc.conf)</string>
+    <string name="config_title">Configuration</string>
     <string name="btn_start">Start</string>
     <string name="btn_stop">Stop</string>
     <string name="gogoc_started">Gogoc started.</string>
@@ -18,5 +18,8 @@
     <string name="button_ok">OK</string>
     <string name="not_supported">Not Supported</string>
     <string name="not_supported_details">Your device is not supported.\nView project home page for details.</string>
+    <string name="not_available">Not available</string>
+    <string name="gogoc_connecting">Connecting, Be patient.</string>
+    <string name="address_title">IPv6 Address</string>
     
 </resources>

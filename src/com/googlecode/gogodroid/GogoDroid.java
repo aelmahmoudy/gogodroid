@@ -61,7 +61,9 @@ public class GogoDroid extends Activity {
 	Button btnStart;
 	Button btnStop;
 	Button btnDNS;
-	EditText txtBox;
+	Button btnIP;
+	EditText gogocConfig;
+	EditText currentIP;
 	TextView conftxt;
 	
     /** Called when the activity is first created. */
@@ -71,8 +73,10 @@ public class GogoDroid extends Activity {
         setContentView(R.layout.main);
         
         StatusRunning = (RadioButton) findViewById(R.id.Running);
-        txtBox = (EditText) findViewById(R.id.GogocConf);
+        gogocConfig = (EditText) findViewById(R.id.GogocConf);
+        currentIP = (EditText) findViewById(R.id.Address);
         conftxt = (TextView) findViewById(R.id.ConfText);
+
         
 		btnStart = (Button) findViewById(R.id.ButtonStart);
 		btnStart.setOnClickListener(new OnClickListener() {
@@ -94,9 +98,6 @@ public class GogoDroid extends Activity {
 						startGogoc();
 						Log.d(LOG_TAG, "onCreate() gogoc started.");
 						changeStatus();
-						if (statusGogoc()) {
-							showToast(R.string.gogoc_started);
-							}
 						setResult(android.app.Activity.RESULT_OK);
 						}
 				}
@@ -113,7 +114,6 @@ public class GogoDroid extends Activity {
 			public void onClick(View v) {
 				if ( getPid() !="" ){
 					stopGogoc();
-					showToast(R.string.gogoc_stopped);
 					changeStatus();
 					setResult(android.app.Activity.RESULT_OK);
 				}
@@ -131,31 +131,38 @@ public class GogoDroid extends Activity {
 				setDNS();
 				showToast(R.string.dns_changed);
 			}
-
+			
 		});
-
+		
 		//install gogoc binary
 		updateBinary();
 		
 		// load ipv6 and tun modules
 		loadModules();
 		
-		// load configuration in txtBox
-		txtBox.setText( loadConf().toString() );
+		// load configuration in gogocConfig
+		gogocConfig.setText( loadConf().toString() );
 		
-		// change checkbox status
+		// change gogodroid status
 		changeStatus();
     }
     
     
     public void changeStatus() {
-    	if ( statusGogoc() ) {
-			StatusRunning.setChecked(true);
-			txtBox.setFocusable(false);
+    	if ( statusGogoc()&&!getAddress() ) {
+			StatusRunning.setPressed(true);
+			gogocConfig.setFocusable(false);
+			currentIP.setText( R.string.gogoc_connecting );
 		}
+    	else if ( statusGogoc()&&getAddress() ) {
+			StatusRunning.setPressed(false);
+			StatusRunning.setChecked(true);
+			gogocConfig.setFocusable(false);
+    	}
 		else {
 			StatusRunning.setChecked(false);
-			txtBox.setFocusable(true);
+			gogocConfig.setFocusable(true);
+			currentIP.setText( R.string.not_available );
 		}
     	
     }
@@ -256,16 +263,16 @@ public class GogoDroid extends Activity {
     
     
 	public String loadConf() {
-		String Script="";
+		String Config="";
 		File gogoc_conf = new File (GOGOC_CONF);
 		
 		// create gogoc.conf
 		if( ! gogoc_conf.exists() ) {
 			showToast(R.string.conf_not_exists);
 			for (int i=0; i< DEFAULT_CONF.length; i++){
-				Script += DEFAULT_CONF[i] + "\n";
+				Config += DEFAULT_CONF[i] + "\n";
 			}
-			return Script;
+			return Config;
 		}
 		
 		
@@ -274,16 +281,16 @@ public class GogoDroid extends Activity {
 	        String str;
 	        
 	        while ((str = in.readLine()) != null) {
-	        	Script += str + "\n";
+	        	Config += str + "\n";
 	        }
 	        in.close();
 		}
 		catch (Exception ex) {
 			showToast(R.string.cant_read_conf);
-			return Script;
+			return Config;
 		}
 		
-		return Script;
+		return Config;
 	}
 	
 	
@@ -316,9 +323,39 @@ public class GogoDroid extends Activity {
 	    catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-	    
 	    Log.d(LOG_TAG, "statusGogoc() pid='"+pid+"'");
 		return pid;
+	}
+	
+
+	private boolean getAddress() {
+		boolean retcode = false;
+		try {
+			String line;
+			BufferedReader bufferedreader = new BufferedReader(new FileReader(IF_INET6), 1024);
+			while ((line = bufferedreader.readLine()) != null) {
+				if (line.startsWith("fe80") || line.startsWith("0000")) {
+					continue;
+				}
+				if (line.contains("tun") || line.contains("sit")) {
+					StringBuilder stringbuilder = new StringBuilder("");
+					for (int i = 0; i < 8; i++) {
+						stringbuilder.append(line.substring(i * 4, (i + 1) * 4));
+						stringbuilder.append(i == 7 ? "" : ":");
+					}
+					currentIP.setText(stringbuilder.toString()
+						.replaceAll(":(0000)+", ":")
+						.replaceFirst("::+", "::"));
+					retcode = true;
+					break;
+				}
+			}
+			bufferedreader.close();
+		} catch (Exception e) {
+			currentIP.setText(R.string.not_available);
+			return false;
+		}
+		return retcode;
 	}
 	
 	
@@ -359,6 +396,8 @@ public class GogoDroid extends Activity {
 		// change permission to executable
 		RunNative.runCommand("if [ ! -x " + GOGOC_BIN + " ];then chmod 755 " + GOGOC_BIN + ";fi");
 	}
+	
+	
 
 	
 	public void copyRaw(int id,String path)
@@ -391,7 +430,7 @@ public class GogoDroid extends Activity {
 		Log.d(LOG_TAG, "saveConf() init");
 	    try {
 	    	output = new BufferedWriter(new FileWriter(GOGOC_CONF));
-	    	output.write( txtBox.getText().toString() );
+	    	output.write( gogocConfig.getText().toString() );
 	    	output.close();
 	    	Log.d(LOG_TAG, "saveConf() saved and closed");
 	    }
@@ -420,6 +459,5 @@ public class GogoDroid extends Activity {
 			})
 			.show();
 	}
-  
+	
 }
-

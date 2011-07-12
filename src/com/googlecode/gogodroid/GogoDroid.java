@@ -61,7 +61,6 @@ public class GogoDroid extends Activity {
 	Button btnStart;
 	Button btnStop;
 	Button btnDNS;
-	Button btnIP;
 	EditText gogocConfig;
 	EditText currentIP;
 	TextView conftxt;

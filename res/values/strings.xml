@@ -14,11 +14,12 @@
 	
 	
 	
-	<string name="not_available">IPv6 not available.</string><string name="gogoc_connecting">Connecting, please wait.</string><string name="ipv6_not_supported">IPv6 not supported</string>
+	<string name="not_available">IPv6 not available.</string><string name="gogoc_connecting">Connecting, please wait.</string><string name="status_error">Error ( Unknown error )</string><string name="ipv6_not_supported">IPv6 not supported</string>
 	<string name="ipv6_not_supported_details">Your device not support IPv6.\nView project home page for details.\nhttp://gogodroid.googlecode.com/</string>
 	
 	
 	
 	<string name="tun_not_supported">TUN not supported</string>
 	<string name="tun_not_supported_details">Your device not support TUN.\nView project home page for details.\nhttp://gogodroid.googlecode.com/</string>
+	
 </resources>

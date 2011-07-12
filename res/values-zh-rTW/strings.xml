@@ -15,10 +15,11 @@
 	
 	
 	
-	<string name="not_available">IPv6地址不可用</string><string name="gogoc_connecting">正在連接，請耐心等待</string><string name="ipv6_not_supported">設備不支援IPv6</string>
+	<string name="not_available">IPv6地址不可用</string><string name="gogoc_connecting">正在連接，請耐心等待</string><string name="status_error">錯誤（未知錯誤）</string><string name="ipv6_not_supported">設備不支援IPv6</string>
 	<string name="ipv6_not_supported_details">您當前使用的設備不支援IPv6，請在項目主頁上了解詳細信息。\nhttp://gogodroid.googlecode.com/</string>
 	<string name="tun_not_supported">設備不支援TUN</string>
 	<string name="tun_not_supported_details">您當前使用的設備不支援TUN，請在項目主頁上了解詳細信息。\nhttp://gogodroid.googlecode.com/</string>
+	
 	
 	
 	

@@ -81,7 +81,7 @@ public class GogoDroid extends Activity {
 		btnStart.setOnClickListener(new OnClickListener() {
 		
 			public void onClick(View v) {
-
+				
 				// load ipv6 and tun modules
 				loadModules();
 				
@@ -219,7 +219,7 @@ public class GogoDroid extends Activity {
 		thread.start();
 		// sleep to give some time to statusGogoc to detect process
 		try{
-		  Thread.currentThread().sleep(2000);//sleep for 2000 ms
+		  Thread.currentThread().sleep(1000);//sleep for 1000 ms
 		}
 		catch(InterruptedException e){
 			e.printStackTrace();
@@ -233,7 +233,6 @@ public class GogoDroid extends Activity {
     	String temp;
     	
     	run=false;
-    	Log.d(LOG_TAG, "statusGogoc() init");
     	
     	try {
 			Process p = Runtime.getRuntime().exec("ps");
@@ -323,8 +322,8 @@ public class GogoDroid extends Activity {
 		linkstatus = "not_available";
 		showIndicator("not_available");
 		if (statusGogoc())  {
-			showIndicator("connecting");
 			linkstatus = "connecting";
+			showIndicator("connecting");
 			try {
 				String line;
 				BufferedReader bufferedreader = new BufferedReader(new FileReader(IF_INET6), 1024);
@@ -348,8 +347,8 @@ public class GogoDroid extends Activity {
 				}
 				bufferedreader.close();
 			} catch (Exception e) {
-				currentIP.setText(R.string.not_available);
 				linkstatus = "error";
+				showIndicator("error");
 			}
 		}
 		Log.d(LOG_TAG, "statusConnection() returns=" + linkstatus);
@@ -436,8 +435,9 @@ public class GogoDroid extends Activity {
 		}
 	}
 	
+	
 	public void showIndicator(String status) {
-		if (status == "not_avaliable"){
+		if (status == "not_available"){
 			currentIP.setText( R.string.not_available );
 			StatusRunning.setPressed(false);
 			StatusRunning.setChecked(false);
@@ -453,6 +453,12 @@ public class GogoDroid extends Activity {
 			StatusRunning.setPressed(false);
 			StatusRunning.setChecked(true);
 			gogocConfig.setFocusable(false);
+		}
+		if (status == "error"){
+			currentIP.setText(R.string.status_error);
+			StatusRunning.setPressed(false);
+			StatusRunning.setChecked(false);
+			gogocConfig.setFocusable(true);
 		}
 	}
 	

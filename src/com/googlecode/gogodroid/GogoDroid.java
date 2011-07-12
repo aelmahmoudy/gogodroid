@@ -321,15 +321,10 @@ public class GogoDroid extends Activity {
 	public String statusConnection() {
 		String linkstatus;
 		linkstatus = "not_available";
-		currentIP.setText( R.string.not_available );
-		StatusRunning.setPressed(false);
-		StatusRunning.setChecked(false);
-		gogocConfig.setFocusable(true);
+		showIndicator("not_available");
 		if (statusGogoc())  {
-			linkstatus = "pending";
-			StatusRunning.setPressed(true);
-			StatusRunning.setChecked(false);
-			gogocConfig.setFocusable(false);	
+			showIndicator("connecting");
+			linkstatus = "connecting";
 			try {
 				String line;
 				BufferedReader bufferedreader = new BufferedReader(new FileReader(IF_INET6), 1024);
@@ -347,9 +342,7 @@ public class GogoDroid extends Activity {
 							.replaceAll(":(0000)+", ":")
 							.replaceFirst("::+", "::"));
 						linkstatus = "established";
-						StatusRunning.setPressed(false);
-						StatusRunning.setChecked(true);
-						gogocConfig.setFocusable(false);
+						showIndicator("established");
 						break;
 					}
 				}
@@ -440,6 +433,26 @@ public class GogoDroid extends Activity {
 	    }
 	    catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public void showIndicator(String status) {
+		if (status == "not_avaliable"){
+			currentIP.setText( R.string.not_available );
+			StatusRunning.setPressed(false);
+			StatusRunning.setChecked(false);
+			gogocConfig.setFocusable(true);
+		}
+		if (status == "connecting"){
+			currentIP.setText(R.string.gogoc_connecting);
+			StatusRunning.setPressed(true);
+			StatusRunning.setChecked(false);
+			gogocConfig.setFocusable(false);
+		}
+		if (status == "established"){
+			StatusRunning.setPressed(false);
+			StatusRunning.setChecked(true);
+			gogocConfig.setFocusable(false);
 		}
 	}
 	

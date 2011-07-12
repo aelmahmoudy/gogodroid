@@ -16,7 +16,7 @@
 	<TableRow android:layout_width="fill_parent" android:layout_height="wrap_content">
 	<Button android:layout_height="wrap_content" android:id="@+id/ButtonStart" android:text="@string/btn_start" android:layout_weight="1"></Button>
 	<Button android:layout_height="wrap_content" android:id="@+id/ButtonStop" android:text="@string/btn_stop" android:layout_weight="1"></Button>
-	<Button android:layout_height="wrap_content" android:id="@+id/ButtonDNS" android:text="@string/set_dns" android:layout_weight="1"></Button>
+	<Button android:layout_height="wrap_content" android:id="@+id/ButtonDNS" android:text="@string/btn_dns" android:layout_weight="1"></Button>
 	</TableRow>
 </LinearLayout>
 </LinearLayout>

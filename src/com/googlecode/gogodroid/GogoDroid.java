@@ -83,39 +83,41 @@ public class GogoDroid extends Activity {
 		
 			public void onClick(View v) {
 
-				//check whether device is supported, if not, show a error dialog.
+				// load ipv6 and tun modules
+				loadModules();
+				
+				//check again whether device is supported, if not, show a error dialog.
 				File tundev = new File (TUNDEV);
 				File if_inet6 = new File (IF_INET6);
 				if (tundev.exists()&&if_inet6.exists()){
 					// save conf in file
 					saveConf();
-
 					// check if gogoc running
-					if ( getPid() != "") {
+					if ( statusGogoc()) {
 						showToast(R.string.gogoc_already_running);
 						}
 					else {
+						startGogoc();
+						showToast(R.string.gogoc_started);
+						Log.d(LOG_TAG, "onCreate() Gogoc started.");
 						try {
-							startGogoc();
-							showToast(R.string.gogoc_started);
-							Log.d(LOG_TAG, "onCreate() gogoc started.");
-							while(true)
-							{
+							while(true){
 								Thread.sleep(2000);
-								if(getAddress())
+								if(statusConnection()=="established")
 									break;
 								}
 						}
 						catch (Exception e) {
 							e.printStackTrace();
 						}
-						showToast(R.string.connection_established);
 						setResult(android.app.Activity.RESULT_OK);
 						}
-					changeStatus();
 				}
-				else {
-					showDialog(R.string.not_supported,R.string.not_supported_details);
+				else if (!tundev.exists()){
+					showDialog(R.string.tun_not_supported,R.string.tun_not_supported_details);
+					}
+				else if (!if_inet6.exists()){
+					showDialog(R.string.ipv6_not_supported,R.string.ipv6_not_supported_details);
 					}
 				}
 			});
@@ -125,9 +127,9 @@ public class GogoDroid extends Activity {
 		btnStop.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				if ( getPid() !="" ){
+				if ( statusGogoc() ){
 					stopGogoc();
-					changeStatus();
+					statusConnection();
 					showToast(R.string.gogoc_stopped);
 					setResult(android.app.Activity.RESULT_OK);
 				}
@@ -151,44 +153,21 @@ public class GogoDroid extends Activity {
 		//install gogoc binary
 		updateBinary();
 		
-		// load ipv6 and tun modules
-		loadModules();
-		
 		// load configuration in gogocConfig
 		gogocConfig.setText( loadConf().toString() );
 		
 		// save configuration
 		saveConf();
 		
-		// change gogodroid status
-		changeStatus();
+		// check gogodroid status
+		statusConnection();
     }
     
-    
-    public void changeStatus() {
-    	
-    	if ( getAddress() ){
-			StatusRunning.setPressed(false);
-			StatusRunning.setChecked(true);
-			gogocConfig.setFocusable(false);
-    	}
-    	else if ( statusGogoc() ) {
-			StatusRunning.setPressed(true);
-			gogocConfig.setFocusable(false);
-		}
-    	else {
-			StatusRunning.setChecked(false);
-			gogocConfig.setFocusable(true);
-			currentIP.setText( R.string.not_available );
-		}
-    	
-    }
-    
-    
+
     @SuppressWarnings("static-access")
 	public void startGogoc() {
     	if( ! new File(GOGOC_BIN).exists() ) {
-			showToast(R.string.binary_not_exists);
+			updateBinary();
 			return;
 		}
     	
@@ -199,7 +178,7 @@ public class GogoDroid extends Activity {
 			}
 		};
 		thread.start();
-		// sleep to give some time to statusGogoc to detect process
+		// sleep to give some time to statusGogoc for detecting process
 		try{
 		  Thread.currentThread().sleep(2000);//sleep for 2000 ms
 		}
@@ -260,14 +239,13 @@ public class GogoDroid extends Activity {
     	try {
 			Process p = Runtime.getRuntime().exec("ps");
 			p.waitFor();
-			
 			BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			while ( (temp = stdInput.readLine()) != null ) {
 				if ( temp.contains(GOGOC_BIN) ) {
-					Log.d(LOG_TAG, "statusGogoc() temp='"+temp+"'");
 					run = true;
 				}
 			}
+			Log.d(LOG_TAG, "statusGogoc() ='"+run+"'");
 	    }
 	    catch (IOException e) {
 			e.printStackTrace();
@@ -315,7 +293,6 @@ public class GogoDroid extends Activity {
     	String pid;
     	String temp;
     	pid = "";
-    	int i;
     	try{
     		Process process = Runtime.getRuntime().exec("ps");
 			process.waitFor();
@@ -326,9 +303,6 @@ public class GogoDroid extends Activity {
 				if ( temp.contains(GOGOC_BIN) ) {
 					Log.d(LOG_TAG, "statusGogoc() temp='"+temp+"'");
 					String [] cmdArray = temp.split(" +");
-					for (i=0; i< cmdArray.length; i++) {
-						Log.d(LOG_TAG, "loop i="+ i + " => " + cmdArray[i]);
-					}
 					pid = cmdArray[1];
 				}
 			}
@@ -345,34 +319,49 @@ public class GogoDroid extends Activity {
 	}
 	
 
-	private boolean getAddress() {
-		boolean retcode = false;
-		try {
-			String line;
-			BufferedReader bufferedreader = new BufferedReader(new FileReader(IF_INET6), 1024);
-			while ((line = bufferedreader.readLine()) != null) {
-				if (line.startsWith("fe80") || line.startsWith("0000")) {
-					continue;
-				}
-				if (line.contains("tun") || line.contains("sit")) {
-					StringBuilder stringbuilder = new StringBuilder("");
-					for (int i = 0; i < 8; i++) {
-						stringbuilder.append(line.substring(i * 4, (i + 1) * 4));
-						stringbuilder.append(i == 7 ? "" : ":");
+	public String statusConnection() {
+		String linkstatus;
+		linkstatus = "not_available";
+		currentIP.setText( R.string.not_available );
+		StatusRunning.setPressed(false);
+		StatusRunning.setChecked(false);
+		gogocConfig.setFocusable(true);
+		if (statusGogoc())  {
+			linkstatus = "pending";
+			StatusRunning.setPressed(true);
+			StatusRunning.setChecked(false);
+			gogocConfig.setFocusable(false);	
+			try {
+				String line;
+				BufferedReader bufferedreader = new BufferedReader(new FileReader(IF_INET6), 1024);
+				while ((line = bufferedreader.readLine()) != null) {
+					if (line.startsWith("fe80") || line.startsWith("0000")) {
+						continue;
 					}
-					currentIP.setText(stringbuilder.toString()
-						.replaceAll(":(0000)+", ":")
-						.replaceFirst("::+", "::"));
-					retcode = true;
-					break;
+					if (line.contains("tun")) {
+						StringBuilder stringbuilder = new StringBuilder("");
+						for (int i = 0; i < 8; i++) {
+							stringbuilder.append(line.substring(i * 4, (i + 1) * 4));
+							stringbuilder.append(i == 7 ? "" : ":");
+						}
+						currentIP.setText(stringbuilder.toString()
+							.replaceAll(":(0000)+", ":")
+							.replaceFirst("::+", "::"));
+						linkstatus = "established";
+						StatusRunning.setPressed(false);
+						StatusRunning.setChecked(true);
+						gogocConfig.setFocusable(false);
+						break;
+					}
 				}
+				bufferedreader.close();
+			} catch (Exception e) {
+				currentIP.setText(R.string.not_available);
+				linkstatus = "error";
 			}
-			bufferedreader.close();
-		} catch (Exception e) {
-			currentIP.setText(R.string.not_available);
-			return false;
 		}
-		return retcode;
+		Log.d(LOG_TAG, "statusConnection() returns=" + linkstatus);
+		return linkstatus;
 	}
 	
 	
@@ -469,7 +458,7 @@ public class GogoDroid extends Activity {
 			new AlertDialog.Builder(this)
 				.setTitle(title)
 				.setMessage(message)
-				.setNegativeButton(R.string.button_ok, new DialogInterface.OnClickListener(){
+				.setNegativeButton(R.string.btn_ok, new DialogInterface.OnClickListener(){
 				public void onClick(DialogInterface di, int i) {
 				}
 			})

@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">GogoDroid</string>
-    <string name="app_webpage_url">http://code.google.com/p/gogodroid/</string>
-    <string name="if_running">Running ?</string>
-    <string name="config_title">Configuration</string>
-    <string name="btn_start">Start</string>
-    <string name="btn_stop">Stop</string>
-    <string name="gogoc_started">Gogoc started.</string>
-    <string name="gogoc_stopped">Gogoc stopped.</string>
-    <string name="binary_not_exists">Gogoc binary not exist. You may need to reinstall this app.</string>
-    <string name="cant_read_conf">Cannot read gogoc.conf</string>
-    <string name="conf_not_exists">config not exist, use default.</string>
-    <string name="binary_installed">Gogoc binary installed.</string>
-    <string name="gogoc_already_running">Gogoc already running.</string>
-    <string name="gogoc_not_running">Gogoc is not running.</string><string name="set_dns">Set DNS</string>
-    <string name="dns_changed">DNS Changed.</string>
-    <string name="button_ok">OK</string>
-    <string name="not_supported">Not Supported</string>
-    <string name="not_supported_details">Your device is not supported.\nView project home page for details.\nhttp://gogodroid.googlecode.com/</string>
-    <string name="not_available">IPv6 Not available.</string>
-    <string name="gogoc_connecting">Connecting, please wait.</string>
-    <string name="address_title">IPv6 Address</string>
-    <string name="connection_established">Connection established</string>
-    
+	<string name="app_name">GogoDroid</string>
+	<string name="app_webpage_url">http://code.google.com/p/gogodroid/</string>
+	<string name="config_title">Configuration</string>
+	<string name="btn_start">Start</string>
+	<string name="btn_stop">Stop</string>
+	<string name="btn_dns">Set DNS</string><string name="btn_ok">OK</string><string name="gogoc_started">Gogoc started.</string>
+	<string name="gogoc_stopped">Gogoc stopped.</string>
+	<string name="dns_changed">DNS Changed.</string><string name="connection_established">Connection established.</string><string name="binary_installed">Gogoc binary installed.</string><string name="gogoc_already_running">Gogoc already running.</string><string name="gogoc_not_running">Gogoc is not running.</string><string name="cant_read_conf">Cannot read gogoc.conf</string>
+	<string name="conf_not_exists">config not exist, using default.</string>
+	
+	
+	
+	
+	
+	<string name="not_available">IPv6 not available.</string><string name="gogoc_connecting">Connecting, please wait.</string><string name="ipv6_not_supported">IPv6 not supported</string>
+	<string name="ipv6_not_supported_details">Your device not support IPv6.\nView project home page for details.\nhttp://gogodroid.googlecode.com/</string>
+	
+	
+	
+	<string name="tun_not_supported">TUN not supported</string>
+	<string name="tun_not_supported_details">Your device not support TUN.\nView project home page for details.\nhttp://gogodroid.googlecode.com/</string>
 </resources>

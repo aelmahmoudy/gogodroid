@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">GogoDroid</string>
-    <string name="app_webpage_url">http://code.google.com/p/gogodroid/</string>
-    <string name="if_running">正在運行？</string>
-    <string name="config_title">配置文檔</string>
-    <string name="btn_start">啓動</string>
-    <string name="btn_stop">停止</string>
-    <string name="gogoc_started">Gogoc 已啓動</string>
-    <string name="gogoc_stopped">Gogoc 已停止</string>
-    <string name="binary_not_exists">Gogoc 可執行文檔不存在，或許您需要重新安裝這個程式</string>
-    <string name="cant_read_conf">無法載入配置文檔</string>
-    <string name="conf_not_exists">配置文檔不存在，將使用默認偏好設定</string>
-    <string name="binary_installed">Gogoc 可執行文檔已安裝</string>
-    <string name="gogoc_already_running">Gogoc 已經在運行</string>
-    <string name="gogoc_not_running">Gogoc 沒有在運行</string><string name="set_dns">設定DNS</string>
-    <string name="dns_changed">DNS 已設定</string>
-    <string name="button_ok">確認</string>
-    <string name="not_supported">設備不被支援</string>
-    <string name="not_supported_details">您當前使用的設備不被支援\n請在項目主頁上了解詳細信息。\nhttp://gogodroid.googlecode.com/</string>
-    <string name="not_available">IPv6地址不可用</string>
-    <string name="gogoc_connecting">正在連接，請耐心等待</string>
-    <string name="address_title">IPv6 地址</string>
-    <string name="connection_established">連接已建立</string>
-    
+	<string name="app_name">GogoDroid</string>
+	<string name="app_webpage_url">http://code.google.com/p/gogodroid/</string>
+	<string name="config_title">配置文檔</string>
+	<string name="btn_start">啓動</string>
+	<string name="btn_stop">停止</string>
+	<string name="btn_dns">設定DNS</string><string name="btn_ok">確認</string><string name="gogoc_started">Gogoc 已啓動</string>
+	<string name="gogoc_stopped">Gogoc 已停止</string>
+	<string name="dns_changed">DNS 已設定</string><string name="connection_established">連接已建立</string><string name="binary_installed">Gogoc 可執行文檔已安裝</string><string name="gogoc_already_running">Gogoc 已經在運行</string><string name="gogoc_not_running">Gogoc 沒有在運行</string><string name="cant_read_conf">無法載入配置文檔</string>
+	
+	<string name="conf_not_exists">配置文檔不存在，將使用默認偏好設定</string>
+	
+	
+	
+	
+	
+	<string name="not_available">IPv6地址不可用</string><string name="gogoc_connecting">正在連接，請耐心等待</string><string name="ipv6_not_supported">設備不支援IPv6</string>
+	<string name="ipv6_not_supported_details">您當前使用的設備不支援IPv6，請在項目主頁上了解詳細信息。\nhttp://gogodroid.googlecode.com/</string>
+	<string name="tun_not_supported">設備不支援TUN</string>
+	<string name="tun_not_supported_details">您當前使用的設備不支援TUN，請在項目主頁上了解詳細信息。\nhttp://gogodroid.googlecode.com/</string>
+	
+	
+	
 </resources>

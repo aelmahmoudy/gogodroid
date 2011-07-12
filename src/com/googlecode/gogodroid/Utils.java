@@ -35,7 +35,7 @@ public class Utils {
     		Process process = Runtime.getRuntime().exec("sh");
     		//process = Runtime.getRuntime().exec("sh");
     		OutputStream os = process.getOutputStream();
-    		Log.d(LOG_TAG, "startGogoc() cmd=" + command );
+    		Log.d(LOG_TAG, "runCommand() cmd=" + command );
     		writeLine( os, command );
     		os.flush();
     		}
@@ -50,7 +50,7 @@ public class Utils {
     		Process process = Runtime.getRuntime().exec("su -c sh");
     		//process = Runtime.getRuntime().exec("sh");
     		OutputStream os = process.getOutputStream();
-    		Log.d(LOG_TAG, "startGogoc() rootcmd=" + sucommand );
+    		Log.d(LOG_TAG, "runSuCommand() cmd=" + sucommand );
     		writeLine( os, sucommand );
     		os.flush();
     		}

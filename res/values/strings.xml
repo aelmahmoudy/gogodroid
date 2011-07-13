@@ -21,5 +21,7 @@
 	
 	<string name="tun_not_supported">TUN not supported</string>
 	<string name="tun_not_supported_details">Your device not support TUN.\nView project home page for details.\nhttp://gogodroid.googlecode.com/</string>
+	<string name="busybox_not_installed">BusyBox not installed</string>
+	<string name="busybox_not_installed_details">BusyBox not installed on your device. You can ignore this message, buy may causes gogoc refused to start.</string>
 	
 </resources>

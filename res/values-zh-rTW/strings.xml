@@ -19,6 +19,8 @@
 	<string name="ipv6_not_supported_details">您當前使用的設備不支援IPv6，請在項目主頁上了解詳細信息。\nhttp://gogodroid.googlecode.com/</string>
 	<string name="tun_not_supported">設備不支援TUN</string>
 	<string name="tun_not_supported_details">您當前使用的設備不支援TUN，請在項目主頁上了解詳細信息。\nhttp://gogodroid.googlecode.com/</string>
+	<string name="busybox_not_installed">BusyBox 未安裝</string>
+	<string name="busybox_not_installed_details">BusyBox 沒有安裝在您的設備上。您可以忽略這個提示並繼續，但是可能會造成應用程式不能正常啟動。</string>
 	
 	
 	

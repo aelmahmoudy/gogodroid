@@ -152,6 +152,9 @@ public class GogoDroid extends Activity {
 		//install gogoc binary
 		updateBinary();
 		
+		//check whether busybox installed
+		checkBusyBox();
+		
 		// load configuration in gogocConfig
 		gogocConfig.setText( loadConf().toString() );
 		
@@ -230,16 +233,16 @@ public class GogoDroid extends Activity {
     
     public boolean statusGogoc() {
     	boolean run;
-    	String temp;
+    	String line;
     	
     	run=false;
     	
     	try {
-			Process p = Runtime.getRuntime().exec("ps");
-			p.waitFor();
-			BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
-			while ( (temp = stdInput.readLine()) != null ) {
-				if ( temp.contains(GOGOC_BIN) ) {
+			Process process = Runtime.getRuntime().exec("ps");
+			process.waitFor();
+			BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			while ( (line = stdInput.readLine()) != null ) {
+				if ( line.contains(GOGOC_BIN) ) {
 					run = true;
 				}
 			}
@@ -252,6 +255,31 @@ public class GogoDroid extends Activity {
 			e.printStackTrace();
 		}
     	return run;
+    }
+    
+    
+    public void checkBusyBox() {
+    	String line;
+
+    	try {
+			Process process = Runtime.getRuntime().exec("busybox");
+			process.waitFor();
+			BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			line = stdInput.readLine();
+				if ( line.contains("BusyBox") ) {
+					Log.d(LOG_TAG, "checkBusyBox() = installed");
+				}
+				else {
+					Log.d(LOG_TAG, "checkBusyBox() = not_installed");
+					showDialog(R.string.busybox_not_installed,R.string.busybox_not_installed_details);
+				}
+	    }
+	    catch (IOException e) {
+			e.printStackTrace();
+		}
+	    catch (InterruptedException e) {
+			e.printStackTrace();
+		}
     }
     
     
@@ -423,7 +451,6 @@ public class GogoDroid extends Activity {
 	
 	public void saveConf() {
 		Writer output = null;
-		Log.d(LOG_TAG, "saveConf() init");
 	    try {
 	    	output = new BufferedWriter(new FileWriter(GOGOC_CONF));
 	    	output.write( gogocConfig.getText().toString() );

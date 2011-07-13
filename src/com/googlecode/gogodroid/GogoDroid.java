@@ -66,8 +66,8 @@ public class GogoDroid extends Activity {
 	TextView conftxt;
 	
     /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+	    @Override
+	    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
@@ -231,7 +231,7 @@ public class GogoDroid extends Activity {
 	}
 
     
-    public boolean statusGogoc() {
+	public boolean statusGogoc() {
     	boolean run;
     	String line;
     	
@@ -258,7 +258,7 @@ public class GogoDroid extends Activity {
     }
     
     
-    public void checkBusyBox() {
+	public void checkBusyBox() {
     	String line;
 
     	try {
@@ -443,7 +443,7 @@ public class GogoDroid extends Activity {
 	}
 	
 	
-    public void setPermission(String file, String mode)
+	public void setPermission(String file, String mode)
     {
         Utils.runCommand("chmod "+ mode + " " + file);
     }

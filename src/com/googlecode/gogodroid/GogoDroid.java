@@ -24,7 +24,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.Writer;
 import java.io.InputStreamReader;
 import java.io.InputStream;
@@ -81,9 +80,6 @@ public class GogoDroid extends Activity {
 		btnStart.setOnClickListener(new OnClickListener() {
 		
 			public void onClick(View v) {
-				
-				// load ipv6 and tun modules
-				loadModules();
 				
 				//check again whether device is supported, if not, show a error dialog.
 				File tundev = new File (TUNDEV);
@@ -152,6 +148,9 @@ public class GogoDroid extends Activity {
 		//install gogoc binary
 		updateBinary();
 		
+		// load ipv6 and tun modules
+		loadModules();
+		
 		//check whether busybox installed
 		checkBusyBox();
 		
@@ -184,7 +183,7 @@ public class GogoDroid extends Activity {
 		try{
 		  Thread.currentThread().sleep(2000);//sleep for 2000 ms
 		}
-		catch(InterruptedException e){
+		catch(Exception e){
 			e.printStackTrace();
 		}
     }
@@ -204,7 +203,7 @@ public class GogoDroid extends Activity {
 		try{
 		  Thread.currentThread().sleep(2000);//sleep for 2000 ms
 		}
-		catch(InterruptedException e){
+		catch(Exception e){
 			e.printStackTrace();
 		}
     }
@@ -224,7 +223,7 @@ public class GogoDroid extends Activity {
 		try{
 		  Thread.currentThread().sleep(1000);//sleep for 1000 ms
 		}
-		catch(InterruptedException e){
+		catch(Exception e){
 			e.printStackTrace();
 		}
 
@@ -248,10 +247,7 @@ public class GogoDroid extends Activity {
 			}
 			Log.d(LOG_TAG, "statusGogoc() ='"+run+"'");
 	    }
-	    catch (IOException e) {
-			e.printStackTrace();
-		}
-	    catch (InterruptedException e) {
+	    catch (Exception e) {
 			e.printStackTrace();
 		}
     	return run;
@@ -274,10 +270,7 @@ public class GogoDroid extends Activity {
 					showDialog(R.string.busybox_not_installed,R.string.busybox_not_installed_details);
 				}
 	    }
-	    catch (IOException e) {
-			e.printStackTrace();
-		}
-	    catch (InterruptedException e) {
+	    catch (Exception e) {
 			e.printStackTrace();
 		}
     }
@@ -334,10 +327,7 @@ public class GogoDroid extends Activity {
 			}
     		
     	}
-    	catch (IOException e) {
-			e.printStackTrace();
-		}
-	    catch (InterruptedException e) {
+    	catch (Exception e) {
 			e.printStackTrace();
 		}
 	    Log.d(LOG_TAG, "statusGogoc() pid='"+pid+"'");
@@ -370,16 +360,18 @@ public class GogoDroid extends Activity {
 							.replaceFirst("::+", "::"));
 						linkstatus = "established";
 						showIndicator("established");
+						Log.d(LOG_TAG, "statusConnection() address=" + stringbuilder.toString());
 						break;
 					}
 				}
 				bufferedreader.close();
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				linkstatus = "error";
 				showIndicator("error");
 			}
 		}
-		Log.d(LOG_TAG, "statusConnection() returns=" + linkstatus);
+		Log.d(LOG_TAG, "statusConnection() status=" + linkstatus);
 		return linkstatus;
 	}
 	
@@ -388,16 +380,22 @@ public class GogoDroid extends Activity {
 		File tundev = new File (TUNDEV);
 		File if_inet6 = new File (IF_INET6);
 
+	try {
 		//check if /proc/net/if_inet6 exists
 		if ( ! tundev.exists()){
 			Log.d(LOG_TAG, "loadModule() cmd='modprobe tun'");
 			Utils.runSuCommand("modprobe tun");
 			}
 		//check if /proc/net/if_inet6 exists
-    	if ( ! if_inet6.exists()){
-    		Log.d(LOG_TAG, "loadModule() cmd='modprobe ipv6");
-    		Utils.runSuCommand("modprobe ipv6");
-    		}
+		if ( ! if_inet6.exists()){
+			Log.d(LOG_TAG, "loadModule() cmd='modprobe ipv6");
+			Utils.runSuCommand("modprobe ipv6");
+			}
+		Thread.sleep(2000L);
+		}
+	catch (Exception e) {
+		e.printStackTrace();
+		}
 	}
 
 
@@ -439,7 +437,9 @@ public class GogoDroid extends Activity {
 			fos.write(buffer);
 			fos.close();
 		}
-		catch (Exception e){}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -457,7 +457,7 @@ public class GogoDroid extends Activity {
 	    	output.close();
 	    	Log.d(LOG_TAG, "saveConf() saved and closed");
 	    }
-	    catch (IOException e) {
+	    catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

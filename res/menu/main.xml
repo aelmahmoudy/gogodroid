@@ -1,7 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item
+        android:id="@+id/start_stop"
+        android:title="@string/btn_start"/>
+    <item
         android:id="@+id/action_preferences"
         android:title="@string/action_preferences"/>
+    <item
+        android:id="@+id/set_dns"
+        android:title="@string/btn_dns"/>
     <item
         android:id="@+id/action_exit"
         android:title="@string/action_exit"/>

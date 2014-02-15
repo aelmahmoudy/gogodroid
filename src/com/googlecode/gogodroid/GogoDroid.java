@@ -62,7 +62,6 @@ public class GogoDroid extends Activity {
 	RadioButton StatusRunning;
 	Button btnStart;
 	Button btnStop;
-	Button btnDNS;
 	EditText gogocConfig;
 	EditText currentIP;
 	TextView conftxt;
@@ -138,16 +137,6 @@ public class GogoDroid extends Activity {
 
 		});
 		
-		btnDNS = (Button) findViewById(R.id.ButtonDNS);
-		btnDNS.setOnClickListener(new OnClickListener() {
-
-			public void onClick(View v) {
-				setDNS();
-				showToast(R.string.dns_changed);
-			}
-			
-		});
-		
 		//install gogoc binary
 		updateBinary();
 		
@@ -171,25 +160,39 @@ public class GogoDroid extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        MenuItem startStopItem = menu.findItem(R.id.start_stop);
+        if( statusGogoc()) {
+          startStopItem.setTitle(R.string.btn_stop);
+        }
+        else {
+          startStopItem.setTitle(R.string.btn_start);
+        }
         return true;
     }
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_preferences) {
+        switch(item.getItemId()) {
+          case R.id.action_preferences:
             startActivity(new Intent(this, GogoPreferenceActivity.class));
             return true;
-        }
-
-        if (item.getItemId() == R.id.action_exit) {
-					  if ( statusGogoc()) {
+          case R.id.action_exit:
+          if ( statusGogoc()) {
               stopGogoc();
             }
             finish();
             return true;
+          case R.id.set_dns:
+            setDNS();
+            showToast(R.string.dns_changed);
+            return true;
+          case R.id.start_stop:
+            //item.setTitle(R.string.btn_stop);
+            return true;
+          default:
+            return super.onOptionsItemSelected(item);
         }
 
-        return super.onOptionsItemSelected(item);
     }
 
 
@@ -538,5 +541,6 @@ public class GogoDroid extends Activity {
 			.show();
 	}
 	
+		
 	
 }

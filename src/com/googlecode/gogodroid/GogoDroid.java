@@ -177,7 +177,7 @@ public class GogoDroid extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_preferences) {
-            startActivity(new Intent(getApplication(), GogoPreferenceActivity.class));
+            startActivity(new Intent(this, GogoPreferenceActivity.class));
             return true;
         }
 

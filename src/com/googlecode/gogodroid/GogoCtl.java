@@ -133,6 +133,42 @@ public class GogoCtl {
     return run;
   }
 
+  public String statusConnection() {
+    String linkstatus;
+    linkstatus = "not_available";
+    if (statusGogoc())  {
+      linkstatus = "connecting";
+      try {
+        String line;
+        BufferedReader bufferedreader = new BufferedReader(new FileReader(Constants.IF_INET6), 1024);
+        while ((line = bufferedreader.readLine()) != null) {
+          if (line.startsWith("fe80") || line.startsWith("0000")) {
+            continue;
+          }
+          if (line.contains("tun")) {
+            StringBuilder stringbuilder = new StringBuilder("");
+            for (int i = 0; i < 8; i++) {
+              stringbuilder.append(line.substring(i * 4, (i + 1) * 4));
+              stringbuilder.append(i == 7 ? "" : ":");
+            }
+            stringbuilder.toString()
+              .replaceAll(":(0000)+", ":")
+              .replaceFirst("::+", "::");
+            linkstatus = "established " + stringbuilder;
+            Log.d(Constants.LOG_TAG, "statusConnection() address=" + stringbuilder.toString());
+            break;
+          }
+        }
+        bufferedreader.close();
+      }
+      catch (Exception e) {
+        linkstatus = "error";
+      }
+    }
+    Log.d(Constants.LOG_TAG, "statusConnection() status=" + linkstatus);
+    return linkstatus;
+  }
+
   public String loadConf() {
     String Config="";
     File gogoc_conf = new File (Constants.GOGOC_CONF);

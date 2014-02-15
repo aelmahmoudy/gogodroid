@@ -19,16 +19,6 @@
  */
 package com.googlecode.gogodroid;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.Writer;
-import java.io.InputStreamReader;
-import java.io.InputStream;
-import java.io.FileOutputStream;
-
 import android.util.Log;
 import android.app.Activity;
 import android.content.Intent;
@@ -52,6 +42,7 @@ public class GogoDroid extends Activity {
 	EditText currentIP;
 	TextView conftxt;
   GogoCtl ctl;
+  String linkstatus;
 	
     /** Called when the activity is first created. */
 	    @Override
@@ -76,6 +67,8 @@ public class GogoDroid extends Activity {
 				ctl.startGogoc();
 				ctl.showToast(R.string.gogoc_started);
 				Log.d(Constants.LOG_TAG, "onCreate() Gogoc started.");
+				linkstatus = ctl.statusConnection();
+		    showIndicator(linkstatus);
 				/*try {
           // TODO: move to a service ?
 					while(true){
@@ -92,7 +85,8 @@ public class GogoDroid extends Activity {
 			}
       else {
 				ctl.stopGogoc();
-				statusConnection();
+				linkstatus = ctl.statusConnection();
+		    showIndicator(linkstatus);
 				ctl.showToast(R.string.gogoc_stopped);
 				setResult(android.app.Activity.RESULT_OK);
         ((Button) v).setText(R.string.btn_start);
@@ -121,7 +115,8 @@ public class GogoDroid extends Activity {
 		ctl.saveConf(gogocConfig.getText().toString());
 		
 		// check gogodroid status
-		statusConnection();
+		linkstatus = ctl.statusConnection();
+		showIndicator(linkstatus);
 
     }
 
@@ -186,49 +181,6 @@ public class GogoDroid extends Activity {
 	}
 
 	
-	public String statusConnection() {
-		String linkstatus;
-		linkstatus = "not_available";
-		showIndicator("not_available");
-		if (ctl.statusGogoc())  {
-			linkstatus = "connecting";
-			showIndicator("connecting");
-			try {
-				String line;
-				BufferedReader bufferedreader = new BufferedReader(new FileReader(Constants.IF_INET6), 1024);
-				while ((line = bufferedreader.readLine()) != null) {
-					if (line.startsWith("fe80") || line.startsWith("0000")) {
-						continue;
-					}
-					if (line.contains("tun")) {
-						StringBuilder stringbuilder = new StringBuilder("");
-						for (int i = 0; i < 8; i++) {
-							stringbuilder.append(line.substring(i * 4, (i + 1) * 4));
-							stringbuilder.append(i == 7 ? "" : ":");
-						}
-						currentIP.setText(stringbuilder.toString()
-							.replaceAll(":(0000)+", ":")
-							.replaceFirst("::+", "::"));
-						linkstatus = "established";
-						showIndicator("established");
-						Log.d(Constants.LOG_TAG, "statusConnection() address=" + stringbuilder.toString());
-						break;
-					}
-				}
-				bufferedreader.close();
-			}
-			catch (Exception e) {
-				linkstatus = "error";
-				showIndicator("error");
-			}
-		}
-		Log.d(Constants.LOG_TAG, "statusConnection() status=" + linkstatus);
-		return linkstatus;
-	}
-	
-	
-	
-	
 	public void showIndicator(String status) {
 		if (status == "not_available"){
 			currentIP.setText( R.string.not_available );
@@ -242,7 +194,8 @@ public class GogoDroid extends Activity {
 			StatusRunning.setChecked(false);
 			gogocConfig.setFocusable(false);
 		}
-		if (status == "established"){
+		if (status.startsWith("established")){
+			currentIP.setText(status.substring(12, status.length()));
 			StatusRunning.setPressed(false);
 			StatusRunning.setChecked(true);
 			gogocConfig.setFocusable(false);

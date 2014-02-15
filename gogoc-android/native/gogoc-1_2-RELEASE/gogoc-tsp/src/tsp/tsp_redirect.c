@@ -60,7 +60,7 @@ tRedirectStatus tspAddBrokerToList(tBrokerList **broker_list, char *address, tBr
 	}
 
 	/* Set the broker address */
-	pal_snprintf(new_broker->address, MAX_REDIRECT_ADDRESS_LENGTH, address);
+	pal_snprintf(new_broker->address, MAX_REDIRECT_ADDRESS_LENGTH, "%s", address);
 
 	/* Validate that the address was set correctly */
 	if (strlen(new_broker->address) != strlen(address)) {
@@ -433,7 +433,7 @@ tRedirectStatus tspReadLastServerFromFile(char *last_server_file, char *buffer) 
 		if (strlen(line) && (line[strlen(line) - 1] == '\n' || line[strlen(line) - 1] == '\r')) line[strlen(line) - 1] = '\0';
 
 		/* Copy the line to the buffer */
-		sprintf(buffer, line);
+		sprintf(buffer, "%s", line);
 
 		/* We found a server, so stop looking */
 		found_server = 1;

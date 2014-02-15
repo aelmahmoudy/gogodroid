@@ -31,8 +31,6 @@ import java.io.FileOutputStream;
 
 import android.util.Log;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -43,7 +41,6 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.googlecode.gogodroid.R;
 
@@ -54,6 +51,7 @@ public class GogoDroid extends Activity {
 	EditText gogocConfig;
 	EditText currentIP;
 	TextView conftxt;
+  GogoCtl ctl;
 	
     /** Called when the activity is first created. */
 	    @Override
@@ -72,69 +70,44 @@ public class GogoDroid extends Activity {
 		
 			public void onClick(View v) {
 				
-      if( !statusGogoc()) {
-				//check again whether device is supported, if not, show a error dialog.
-				File tundev = new File (Constants.TUNDEV);
-				File if_inet6 = new File (Constants.IF_INET6);
-				if (tundev.exists()&&if_inet6.exists()){
-					// save conf in file
-					saveConf();
-					// check if gogoc running
-					if ( statusGogoc()) {
-						showToast(R.string.gogoc_already_running);
-						}
-					else {
-						startGogoc();
-						showToast(R.string.gogoc_started);
-						Log.d(Constants.LOG_TAG, "onCreate() Gogoc started.");
-						/*try {
-              // TODO: move to a service ?
-							while(true){
-								Thread.sleep(2000);
-								if(statusConnection()=="established")
-									break;
-								}
-						}
-						catch (Exception e) {
-							e.printStackTrace();
-						}*/
-						setResult(android.app.Activity.RESULT_OK);
-            ((Button) v).setText(R.string.btn_stop);
+      if( !ctl.statusGogoc()) {
+				// save conf in file
+				ctl.saveConf( gogocConfig.getText().toString() );
+				ctl.startGogoc();
+				ctl.showToast(R.string.gogoc_started);
+				Log.d(Constants.LOG_TAG, "onCreate() Gogoc started.");
+				/*try {
+          // TODO: move to a service ?
+					while(true){
+						Thread.sleep(2000);
+						if(statusConnection()=="established")
+							break;
 						}
 				}
-				else if (!tundev.exists()){
-					showDialog(R.string.tun_not_supported,R.string.tun_not_supported_details);
-					}
-				else if (!if_inet6.exists()){
-					showDialog(R.string.ipv6_not_supported,R.string.ipv6_not_supported_details);
-					}
+				catch (Exception e) {
+					e.printStackTrace();
+				}*/
+				setResult(android.app.Activity.RESULT_OK);
+        ((Button) v).setText(R.string.btn_stop);
 			}
       else {
-				if ( statusGogoc() ){
-					stopGogoc();
-					statusConnection();
-					showToast(R.string.gogoc_stopped);
-					setResult(android.app.Activity.RESULT_OK);
-          ((Button) v).setText(R.string.btn_start);
-				}
-				else {
-					showToast(R.string.gogoc_not_running);
-				}
+				ctl.stopGogoc();
+				statusConnection();
+				ctl.showToast(R.string.gogoc_stopped);
+				setResult(android.app.Activity.RESULT_OK);
+        ((Button) v).setText(R.string.btn_start);
       }
         }
 			});
 		
 		
-		//install gogoc binary
-		updateBinary();
+    // Create controller instance:
+    ctl = new GogoCtl(this);
+
+    // Initialize controller:
+    ctl.init();
 		
-		// load ipv6 and tun modules
-		loadModules();
-		
-		//check whether busybox installed
-		checkBusyBox();
-		
-    if( statusGogoc()) {
+    if( ctl.statusGogoc()) {
       btnStartStop.setText(R.string.btn_stop);
     }
     else {
@@ -142,13 +115,14 @@ public class GogoDroid extends Activity {
     }
 
 		// load configuration in gogocConfig
-		gogocConfig.setText( loadConf().toString() );
+		gogocConfig.setText( ctl.loadConf().toString() );
 		
 		// save configuration
-		saveConf();
+		ctl.saveConf(gogocConfig.getText().toString());
 		
 		// check gogodroid status
 		statusConnection();
+
     }
 
     @Override
@@ -156,7 +130,7 @@ public class GogoDroid extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem startStopItem = menu.findItem(R.id.start_stop);
-        if( statusGogoc()) {
+        if( ctl.statusGogoc()) {
           startStopItem.setTitle(R.string.btn_stop);
         }
         else {
@@ -172,14 +146,14 @@ public class GogoDroid extends Activity {
             startActivity(new Intent(this, GogoPreferenceActivity.class));
             return true;
           case R.id.action_exit:
-          if ( statusGogoc()) {
-              stopGogoc();
+          if ( ctl.statusGogoc()) {
+              ctl.stopGogoc();
             }
             finish();
             return true;
           case R.id.set_dns:
             setDNS();
-            showToast(R.string.dns_changed);
+            ctl.showToast(R.string.dns_changed);
             return true;
           case R.id.start_stop:
             //item.setTitle(R.string.btn_stop);
@@ -191,7 +165,6 @@ public class GogoDroid extends Activity {
     }
 
 
-    
     @SuppressWarnings("static-access")
 	public void setDNS(){
     	
@@ -212,117 +185,12 @@ public class GogoDroid extends Activity {
 
 	}
 
-    
-	public boolean statusGogoc() {
-    	boolean run;
-    	String line;
-    	
-    	run=false;
-    	
-    	try {
-			Process process = Runtime.getRuntime().exec("ps");
-			process.waitFor();
-			BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			while ( (line = stdInput.readLine()) != null ) {
-				if ( line.contains(Constants.GOGOC_BIN) ) {
-					run = true;
-				}
-			}
-			Log.d(Constants.LOG_TAG, "statusGogoc() ='"+run+"'");
-	    }
-	    catch (Exception e) {
-			e.printStackTrace();
-		}
-    	return run;
-    }
-    
-    
-	public void checkBusyBox() {
-    	String line;
-
-    	try {
-			Process process = Runtime.getRuntime().exec("busybox");
-			process.waitFor();
-			BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			line = stdInput.readLine();
-				if ( line.contains("BusyBox") ) {
-					Log.d(Constants.LOG_TAG, "checkBusyBox() = installed");
-				}
-				else {
-					Log.d(Constants.LOG_TAG, "checkBusyBox() = not_installed");
-					showDialog(R.string.busybox_not_installed,R.string.busybox_not_installed_details);
-				}
-	    }
-	    catch (Exception e) {
-			e.printStackTrace();
-		}
-    }
-    
-    
-	public String loadConf() {
-		String Config="";
-		File gogoc_conf = new File (Constants.GOGOC_CONF);
-		
-		// create gogoc.conf
-		if( ! gogoc_conf.exists() ) {
-			showToast(R.string.conf_not_exists);
-			for (int i=0; i< Constants.DEFAULT_CONF.length; i++){
-				Config += Constants.DEFAULT_CONF[i] + "\n";
-			}
-			return Config;
-		}
-		
-		
-		try {
-	        BufferedReader in = new BufferedReader(new FileReader(Constants.GOGOC_CONF));
-	        String str;
-	        
-	        while ((str = in.readLine()) != null) {
-	        	Config += str + "\n";
-	        }
-	        in.close();
-		}
-		catch (Exception ex) {
-			showToast(R.string.cant_read_conf);
-			return Config;
-		}
-		
-		return Config;
-	}
 	
-	
-	public String getPid() {
-    	String pid;
-    	String temp;
-    	pid = "";
-    	try{
-    		Process process = Runtime.getRuntime().exec("ps");
-			process.waitFor();
-			
-			BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			while ( (temp = stdInput.readLine()) != null ) {
-				//Log.d(Constants.LOG_TAG, "stopGogoc() temp='"+temp+"'");
-				if ( temp.contains(Constants.GOGOC_BIN) ) {
-					Log.d(Constants.LOG_TAG, "statusGogoc() temp='"+temp+"'");
-					String [] cmdArray = temp.split(" +");
-					pid = cmdArray[1];
-				}
-			}
-    		
-    	}
-    	catch (Exception e) {
-			e.printStackTrace();
-		}
-	    Log.d(Constants.LOG_TAG, "statusGogoc() pid='"+pid+"'");
-		return pid;
-	}
-	
-
 	public String statusConnection() {
 		String linkstatus;
 		linkstatus = "not_available";
 		showIndicator("not_available");
-		if (statusGogoc())  {
+		if (ctl.statusGogoc())  {
 			linkstatus = "connecting";
 			showIndicator("connecting");
 			try {
@@ -359,69 +227,6 @@ public class GogoDroid extends Activity {
 	}
 	
 	
-	public void loadModules(){
-		File tundev = new File (Constants.TUNDEV);
-		File if_inet6 = new File (Constants.IF_INET6);
-
-	try {
-		//check if /proc/net/if_inet6 exists
-		if ( ! tundev.exists()){
-			Log.d(Constants.LOG_TAG, "loadModule() cmd='modprobe tun'");
-			Utils.runSuCommand("modprobe tun");
-			}
-		//check if /proc/net/if_inet6 exists
-		if ( ! if_inet6.exists()){
-			Log.d(Constants.LOG_TAG, "loadModule() cmd='modprobe ipv6");
-			Utils.runSuCommand("modprobe ipv6");
-			}
-		Thread.sleep(2000L);
-		}
-	catch (Exception e) {
-		e.printStackTrace();
-		}
-	}
-
-
-	
-	public void copyRaw(int id,String path)
-	{
-		try {
-			InputStream ins = getResources().openRawResource(id);
-			int size = ins.available();
-
-			// Read the entire resource into a local byte buffer.
-			byte[] buffer = new byte[size];
-			ins.read(buffer);
-			ins.close();
-
-			FileOutputStream fos = new FileOutputStream(path);
-			fos.write(buffer);
-			fos.close();
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-	
-	
-	public void setPermission(String file, String mode)
-    {
-        Utils.runCommand("chmod "+ mode + " " + file);
-    }
-	
-	
-	public void saveConf() {
-		Writer output = null;
-	    try {
-	    	output = new BufferedWriter(new FileWriter(Constants.GOGOC_CONF));
-	    	output.write( gogocConfig.getText().toString() );
-	    	output.close();
-	    	Log.d(Constants.LOG_TAG, "saveConf() saved and closed");
-	    }
-	    catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 	
 	
 	public void showIndicator(String status) {
@@ -449,93 +254,5 @@ public class GogoDroid extends Activity {
 			gogocConfig.setFocusable(true);
 		}
 	}
-	
-	
-	public void showToast(int txt) {
-		int text = txt;
-		int duration = Toast.LENGTH_LONG;
-		Toast toast = Toast.makeText(this, text, duration);
-		toast.show();
-		Log.d(Constants.LOG_TAG, "showToast() txt='"+txt+"'");
-	}
-	
-	
-	public void showDialog(int title, int message) {
-			new AlertDialog.Builder(this)
-				.setTitle(title)
-				.setMessage(message)
-				.setNegativeButton(R.string.btn_ok, new DialogInterface.OnClickListener(){
-				public void onClick(DialogInterface di, int i) {
-				}
-			})
-			.show();
-	}
-	
-		
-	
 
-    @SuppressWarnings("static-access")
-    public void startGogoc() {
-        if( ! new File(Constants.GOGOC_BIN).exists() ) {
-            updateBinary();
-            return;
-        }
-        
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                Utils.runSuCommand(Constants.GOGOC_BIN + " -y -f " + Constants.GOGOC_CONF);
-            }
-        };
-        thread.start();
-        // sleep to give some time to statusGogoc for detecting process
-        try{
-          Thread.currentThread().sleep(2000);//sleep for 2000 ms
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-    
-    
-    @SuppressWarnings("static-access")
-    public void stopGogoc() {
-        
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                Utils.runSuCommand("kill -9 " + getPid());
-            }
-        };
-        thread.start();
-        // sleep to give some time to statusGogoc to detect process
-        try{
-          Thread.currentThread().sleep(2000);//sleep for 2000 ms
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-  public void updateBinary() {
-    File gogoc_working_folder = new File(Constants.GOGOC_DIR);
-    File gogoc_binary = new File(Constants.GOGOC_BIN);
-    
-    // create gogoc working directory
-    if(!gogoc_working_folder.exists())
-    {
-      Log.d(Constants.LOG_TAG, "Creating "+Constants.GOGOC_DIR+" folder");
-      gogoc_working_folder.mkdir();
-    }
-    
-    // install gogoc binary
-    if(!gogoc_binary.exists())
-    {
-      copyRaw(R.raw.gogoc, (Constants.GOGOC_BIN));
-      showToast(R.string.binary_installed);
-    }
-    
-    // change permission to executable
-    Utils.runCommand("if [ ! -x " + Constants.GOGOC_BIN + " ];then chmod 755 " + Constants.GOGOC_BIN + ";fi");
-  }
 }

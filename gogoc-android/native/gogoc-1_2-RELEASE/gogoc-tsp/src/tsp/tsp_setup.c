@@ -45,12 +45,6 @@ Copyright (c) 2001-2007 gogo6 Inc. All rights reserved.
 #include <linux/if.h>
 #include <linux/route.h>
 
-struct in6_ifreq {
-  struct in6_addr ifr6_addr;
-  __u32           ifr6_prefixlen;
-  int             ifr6_ifindex; 
-};
-
 struct in6_rtmsg {
   struct in6_addr rtmsg_dst;
   struct in6_addr rtmsg_src;

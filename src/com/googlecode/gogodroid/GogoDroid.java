@@ -97,7 +97,8 @@ public class GogoDroid extends Activity {
 						startGogoc();
 						showToast(R.string.gogoc_started);
 						Log.d(LOG_TAG, "onCreate() Gogoc started.");
-						try {
+						/*try {
+              // TODO: move to a service ?
 							while(true){
 								Thread.sleep(2000);
 								if(statusConnection()=="established")
@@ -106,7 +107,7 @@ public class GogoDroid extends Activity {
 						}
 						catch (Exception e) {
 							e.printStackTrace();
-						}
+						}*/
 						setResult(android.app.Activity.RESULT_OK);
 						}
 				}

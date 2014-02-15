@@ -60,8 +60,7 @@ public class GogoDroid extends Activity {
 
 	
 	RadioButton StatusRunning;
-	Button btnStart;
-	Button btnStop;
+	Button btnStartStop;
 	EditText gogocConfig;
 	EditText currentIP;
 	TextView conftxt;
@@ -78,11 +77,12 @@ public class GogoDroid extends Activity {
         conftxt = (TextView) findViewById(R.id.ConfText);
 
         
-		btnStart = (Button) findViewById(R.id.ButtonStart);
-		btnStart.setOnClickListener(new OnClickListener() {
+		btnStartStop = (Button) findViewById(R.id.ButtonStartStop);
+		btnStartStop.setOnClickListener(new OnClickListener() {
 		
 			public void onClick(View v) {
 				
+      if( !statusGogoc()) {
 				//check again whether device is supported, if not, show a error dialog.
 				File tundev = new File (TUNDEV);
 				File if_inet6 = new File (IF_INET6);
@@ -109,6 +109,7 @@ public class GogoDroid extends Activity {
 							e.printStackTrace();
 						}*/
 						setResult(android.app.Activity.RESULT_OK);
+            ((Button) v).setText(R.string.btn_stop);
 						}
 				}
 				else if (!tundev.exists()){
@@ -117,26 +118,22 @@ public class GogoDroid extends Activity {
 				else if (!if_inet6.exists()){
 					showDialog(R.string.ipv6_not_supported,R.string.ipv6_not_supported_details);
 					}
-				}
-			});
-		
-		
-		btnStop = (Button) findViewById(R.id.ButtonStop);
-		btnStop.setOnClickListener(new OnClickListener() {
-
-			public void onClick(View v) {
+			}
+      else {
 				if ( statusGogoc() ){
 					stopGogoc();
 					statusConnection();
 					showToast(R.string.gogoc_stopped);
 					setResult(android.app.Activity.RESULT_OK);
+          ((Button) v).setText(R.string.btn_start);
 				}
 				else {
 					showToast(R.string.gogoc_not_running);
 				}
-			}
-
-		});
+      }
+        }
+			});
+		
 		
 		//install gogoc binary
 		updateBinary();
@@ -147,6 +144,13 @@ public class GogoDroid extends Activity {
 		//check whether busybox installed
 		checkBusyBox();
 		
+    if( statusGogoc()) {
+      btnStartStop.setText(R.string.btn_stop);
+    }
+    else {
+      btnStartStop.setText(R.string.btn_start);
+    }
+
 		// load configuration in gogocConfig
 		gogocConfig.setText( loadConf().toString() );
 		

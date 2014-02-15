@@ -4,7 +4,7 @@
 	android:layout_height="fill_parent" android:padding="6px" android:scrollbarAlwaysDrawVerticalTrack="false">
 
 	<TableRow android:layout_height="wrap_content" android:layout_width="fill_parent">
-		<EditText android:singleLine="true" android:focusable="false" android:clickable="false" android:gravity="top" android:id="@+id/Address" android:layout_height="fill_parent" android:layout_weight="1" android:layout_width="fill_parent"></EditText>
+		<EditText android:singleLine="true" android:focusable="true" android:clickable="false" android:gravity="top" android:id="@+id/Address" android:layout_height="fill_parent" android:layout_weight="1" android:layout_width="fill_parent"></EditText>
 		<RadioButton android:id="@+id/Running" android:checked="false" android:focusable="false" android:clickable="false" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_gravity="center"></RadioButton>
 	</TableRow>
 

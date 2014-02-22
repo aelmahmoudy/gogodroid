@@ -27,10 +27,10 @@ import android.content.SharedPreferences;
 public class BootReceiver extends BroadcastReceiver {
   @Override
   public void onReceive(Context context, Intent intent) {
-    SharedPreferences sharedPref = context.getSharedPreferences("preferences", Context.MODE_PRIVATE);
+    SharedPreferences sharedPref = context.getSharedPreferences("Settings", Context.MODE_PRIVATE);
     
     if (sharedPref.getBoolean("start_on_boot", true)) {
-      //context.startService(XabberService.createIntent(context));
+      context.startService(GogoService.createIntent(context));
     } else {
       android.os.Process.killProcess(android.os.Process.myPid());
     }

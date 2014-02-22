@@ -21,8 +21,13 @@ package com.googlecode.gogodroid;
 
 import android.util.Log;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.ComponentName;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Menu;
@@ -41,8 +46,10 @@ public class GogoDroid extends Activity {
 	EditText gogocConfig;
 	EditText currentIP;
 	TextView conftxt;
-  GogoCtl ctl;
   String linkstatus;
+  private ServiceConnection mConnection;
+  private GogoServiceIface mGogoService;
+  private boolean mBound;
 	
     /** Called when the activity is first created. */
 	    @Override
@@ -61,63 +68,75 @@ public class GogoDroid extends Activity {
 		
 			public void onClick(View v) {
 				
-      if( !ctl.statusGogoc()) {
-				// save conf in file
-				ctl.saveConf( gogocConfig.getText().toString() );
-				ctl.startGogoc();
-				ctl.showToast(R.string.gogoc_started);
-				Log.d(Constants.LOG_TAG, "onCreate() Gogoc started.");
-				linkstatus = ctl.statusConnection();
-		    showIndicator(linkstatus);
-				/*try {
-          // TODO: move to a service ?
-					while(true){
-						Thread.sleep(2000);
-						if(statusConnection()=="established")
-							break;
-						}
+      try{
+        if( !mGogoService.statusGogoc()) {
+					// save conf in file
+					mGogoService.saveConf( gogocConfig.getText().toString() );
+					mGogoService.startGogoc();
+					//mGogoService.showToast(R.string.gogoc_started);
+					Log.d(Constants.LOG_TAG, "onCreate() Gogoc started.");
+					linkstatus = mGogoService.statusConnection();
+		      showIndicator(linkstatus);
+					/*try {
+            // TODO: move to a service ?
+						while(true){
+							Thread.sleep(2000);
+							if(statusConnection()=="established")
+								break;
+							}
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}*/
+					setResult(android.app.Activity.RESULT_OK);
+          ((Button) v).setText(R.string.btn_stop);
 				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}*/
-				setResult(android.app.Activity.RESULT_OK);
-        ((Button) v).setText(R.string.btn_stop);
-			}
-      else {
-				ctl.stopGogoc();
-				linkstatus = ctl.statusConnection();
-		    showIndicator(linkstatus);
-				ctl.showToast(R.string.gogoc_stopped);
-				setResult(android.app.Activity.RESULT_OK);
-        ((Button) v).setText(R.string.btn_start);
+        else {
+					mGogoService.stopGogoc();
+					linkstatus = mGogoService.statusConnection();
+		      showIndicator(linkstatus);
+					//mGogoService.showToast(R.string.gogoc_stopped);
+					setResult(android.app.Activity.RESULT_OK);
+          ((Button) v).setText(R.string.btn_start);
+        }
+      }
+      catch (RemoteException e) {
+        Log.e(Constants.LOG_TAG, "", e);
       }
         }
 			});
 		
 		
-    // Create controller instance:
-    ctl = new GogoCtl(this);
-
-    // Initialize controller:
-    ctl.init();
-		
-    if( ctl.statusGogoc()) {
-      btnStartStop.setText(R.string.btn_stop);
-    }
-    else {
-      btnStartStop.setText(R.string.btn_start);
     }
 
-		// load configuration in gogocConfig
-		gogocConfig.setText( ctl.loadConf().toString() );
-		
-		// save configuration
-		ctl.saveConf(gogocConfig.getText().toString());
-		
-		// check gogodroid status
-		linkstatus = ctl.statusConnection();
-		showIndicator(linkstatus);
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mConnection = new ServiceConnection() {
+          @Override
+          public void onServiceConnected(ComponentName className, IBinder binder) {
+            mGogoService = GogoServiceIface.Stub.asInterface(binder);
+            mBound = true;
+            refreshUI();
+          }
 
+          @Override
+          public void onServiceDisconnected(ComponentName className) {
+            mGogoService = null;
+            mBound = false;
+          }
+        };
+        bindService(GogoService.createIntent(this), mConnection, Context.BIND_AUTO_CREATE);
+
+        }
+
+    @Override
+    protected void onStop() {
+      super.onStop();
+      if (mBound) {
+        unbindService(mConnection);
+        mBound = false;
+      }
     }
 
     @Override
@@ -125,11 +144,16 @@ public class GogoDroid extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem startStopItem = menu.findItem(R.id.start_stop);
-        if( ctl.statusGogoc()) {
-          startStopItem.setTitle(R.string.btn_stop);
+        try {
+          if( mGogoService.statusGogoc()) {
+            startStopItem.setTitle(R.string.btn_stop);
+          }
+          else {
+            startStopItem.setTitle(R.string.btn_start);
+          }
         }
-        else {
-          startStopItem.setTitle(R.string.btn_start);
+        catch (RemoteException e) {
+          Log.e(Constants.LOG_TAG, "", e);
         }
         return true;
     }
@@ -141,14 +165,19 @@ public class GogoDroid extends Activity {
             startActivity(new Intent(this, GogoPreferenceActivity.class));
             return true;
           case R.id.action_exit:
-          if ( ctl.statusGogoc()) {
-              ctl.stopGogoc();
+            try {
+              if ( mGogoService.statusGogoc()) {
+                mGogoService.stopGogoc();
+              }
+            }
+            catch (RemoteException e) {
+              Log.e(Constants.LOG_TAG, "", e);
             }
             finish();
             return true;
           case R.id.set_dns:
             setDNS();
-            ctl.showToast(R.string.dns_changed);
+            //mGogoService.showToast(R.string.dns_changed);
             return true;
           case R.id.start_stop:
             //item.setTitle(R.string.btn_stop);
@@ -180,7 +209,37 @@ public class GogoDroid extends Activity {
 
 	}
 
-	
+  private void refreshUI() {
+    try {
+      if( mGogoService.statusGogoc()) {
+        btnStartStop.setText(R.string.btn_stop);
+      }
+      else {
+        btnStartStop.setText(R.string.btn_start);
+      }
+    }
+    catch (RemoteException e) {
+      Log.e(Constants.LOG_TAG, "", e);
+    }
+
+		// load configuration in gogocConfig
+    try {
+		  gogocConfig.setText( mGogoService.loadConf().toString() );
+    }
+    catch (RemoteException e) {
+      Log.e(Constants.LOG_TAG, "", e);
+    }
+		
+		// check gogodroid status
+    try {
+			linkstatus = mGogoService.statusConnection();
+			showIndicator(linkstatus);
+    }
+    catch (RemoteException e) {
+      Log.e(Constants.LOG_TAG, "", e);
+    }
+  }
+
 	public void showIndicator(String status) {
 		if (status == "not_available"){
 			currentIP.setText( R.string.not_available );

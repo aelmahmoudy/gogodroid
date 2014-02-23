@@ -151,11 +151,11 @@ public class GogoCtl {
               stringbuilder.append(line.substring(i * 4, (i + 1) * 4));
               stringbuilder.append(i == 7 ? "" : ":");
             }
-            stringbuilder.toString()
-              .replaceAll(":(0000)+", ":")
-              .replaceFirst("::+", "::");
-            linkstatus = "established " + stringbuilder;
-            Log.d(Constants.LOG_TAG, "statusConnection() address=" + stringbuilder.toString());
+            String IP6Addr = stringbuilder.toString()
+                                          .replaceAll(":(0000)+", ":")
+                                          .replaceFirst("::+", "::");
+            linkstatus = "established " + IP6Addr;
+            Log.d(Constants.LOG_TAG, "statusConnection() address=" + IP6Addr);
             break;
           }
         }

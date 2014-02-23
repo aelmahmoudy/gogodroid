@@ -7,4 +7,5 @@ interface GogoServiceIface {
     String statusConnection();
     String loadConf();
     void saveConf(String conf);
+    void stateChanged();
 }

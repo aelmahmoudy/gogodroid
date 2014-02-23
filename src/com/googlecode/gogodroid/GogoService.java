@@ -19,6 +19,8 @@
  */
 package com.googlecode.gogodroid;
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -61,6 +63,30 @@ public final class GogoService extends Service {
     public void saveConf(String conf) throws RemoteException {
       ctl.saveConf(conf);
     }
+
+    @Override
+    public void stateChanged() throws RemoteException {
+      if(checkNetworkConnection()) {
+        if(!statusGogoc()) {
+          startGogoc();
+        }
+      }
+      else if(statusGogoc()) {
+          stopGogoc();
+      }
+    }
+
+    private boolean checkNetworkConnection() {
+      ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+      try {
+        NetworkInfo activeInfo = connMgr.getActiveNetworkInfo();
+        return((activeInfo != null) && activeInfo.isConnected());
+      }
+      catch(Exception e) {
+        Log.e(Constants.LOG_TAG, "connMgr=" + connMgr, e);
+        return(false);
+      }
+    }
   };
 
   @Override
@@ -70,6 +96,19 @@ public final class GogoService extends Service {
     Log.d("GogoService", "created");
     ctl = new GogoCtl(this);
     ctl.init();
+  }
+
+  @Override
+  public int onStartCommand(Intent intent, int flags, int startId) {
+    super.onStartCommand(intent, flags, startId);
+
+    try {
+      mBinder.stateChanged();
+    }
+    catch(RemoteException e) {
+      Log.e(Constants.LOG_TAG, "", e);
+    }
+    return(START_STICKY);
   }
 
   @Override

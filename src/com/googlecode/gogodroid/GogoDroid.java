@@ -236,13 +236,13 @@ public class GogoDroid extends Activity {
   }
 
   private void showIndicator(String status) {
-    if (status == "not_available"){
+    if (status.equals("not_available")){
       currentIP.setText( R.string.not_available );
       StatusRunning.setPressed(false);
       StatusRunning.setChecked(false);
       gogocConfig.setFocusable(true);
     }
-    if (status == "connecting"){
+    if (status.equals("connecting")){
       currentIP.setText(R.string.gogoc_connecting);
       StatusRunning.setPressed(true);
       StatusRunning.setChecked(false);
@@ -254,7 +254,7 @@ public class GogoDroid extends Activity {
       StatusRunning.setChecked(true);
       gogocConfig.setFocusable(false);
     }
-    if (status == "error"){
+    if (status.equals("error")){
       currentIP.setText(R.string.status_error);
       StatusRunning.setPressed(false);
       StatusRunning.setChecked(false);

@@ -73,6 +73,7 @@ public final class GogoService extends Service {
       }
       else if(statusGogoc()) {
           stopGogoc();
+          // TODO: if isFailover then wait for another broadcast
       }
     }
 

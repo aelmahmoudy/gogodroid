@@ -27,11 +27,8 @@ import android.util.Log;
 
 public class ConnectivityStateReceiver extends BroadcastReceiver {
 
-  private static final String LOGTAG = ConnectivityStateReceiver.class.getName();
-
   @Override
   public void onReceive(final Context context, final Intent intent) {
-    Log.d(LOGTAG, String.format("Received Broadcast %s", intent));
     if (!ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) return;
     context.startService(GogoService.createIntent(context));
   }

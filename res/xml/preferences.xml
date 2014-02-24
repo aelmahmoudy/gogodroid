@@ -4,7 +4,7 @@
     android:title="Settings" >
 
     <CheckBoxPreference
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:key="auto_connect"
         android:summaryOff="@string/is_not_auto_connect"
         android:summaryOn="@string/is_auto_connect"

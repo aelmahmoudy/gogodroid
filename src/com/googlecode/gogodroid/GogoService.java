@@ -24,6 +24,7 @@ import android.net.NetworkInfo;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
@@ -31,6 +32,7 @@ import android.util.Log;
 public final class GogoService extends Service {
 
   private GogoCtl ctl;
+  private String lastStatus = "";
   private static final String LOGTAG = GogoService.class.getName();
 
   private final GogoServiceIface.Stub mBinder = new GogoServiceIface.Stub() {
@@ -66,26 +68,27 @@ public final class GogoService extends Service {
 
     @Override
     public void stateChanged() throws RemoteException {
-      if(checkNetworkConnection()) {
-        if(!statusGogoc()) {
-          startGogoc();
+      ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+      NetworkInfo activeInfo = connMgr.getActiveNetworkInfo();
+      SharedPreferences sharedPref = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+      boolean autoConnect = sharedPref.getBoolean("auto_connect", false);
+
+      if((activeInfo != null) && activeInfo.isConnected()) {
+      // Connection available
+        if(!statusGogoc()) { // gogoc not running
+          // Start gogoc if auto_connect is set or gogoc connection was 
+          // established or trying to connect:
+          if(autoConnect || lastStatus.startsWith("established") || lastStatus.equals("connecting")) {
+            startGogoc();
+          }
         }
       }
-      else if(statusGogoc()) {
+      else if(statusGogoc()) { // Connection unavailable & gogoc is running
+        // stop gogoc unless this is just a failover. (just wait for the next 
+        // broadcast after failover):
+        if((activeInfo != null) && !activeInfo.isFailover()) {
           stopGogoc();
-          // TODO: if isFailover then wait for another broadcast
-      }
-    }
-
-    private boolean checkNetworkConnection() {
-      ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-      try {
-        NetworkInfo activeInfo = connMgr.getActiveNetworkInfo();
-        return((activeInfo != null) && activeInfo.isConnected());
-      }
-      catch(Exception e) {
-        Log.e(Constants.LOG_TAG, "connMgr=" + connMgr, e);
-        return(false);
+        }
       }
     }
   };

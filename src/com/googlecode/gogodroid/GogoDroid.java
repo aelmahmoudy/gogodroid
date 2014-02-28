@@ -205,6 +205,7 @@ public class GogoDroid extends Activity {
   }
 
   private void refreshUI() {
+    // Update start/stop button label
     try {
       if( mGogoService.statusGogoc()) {
         btnStartStop.setText(R.string.btn_stop);

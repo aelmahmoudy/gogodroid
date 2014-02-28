@@ -8,6 +8,7 @@ public class GogoPreferenceActivity extends PreferenceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+    getPreferenceManager().setSharedPreferencesName(Constants.PREFS_FILE);
 		addPreferencesFromResource(R.xml.preferences);
 	}
 

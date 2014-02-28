@@ -22,6 +22,9 @@ package com.googlecode.gogodroid;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.app.Service;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -34,6 +37,11 @@ public final class GogoService extends Service {
   private GogoCtl ctl;
   private String lastStatus = "";
   private static final String LOGTAG = GogoService.class.getName();
+  private static final int notifyID = 1;
+  private Notification.Builder mNotifyBuilder = new Notification.Builder(this)
+                                                        .setContentTitle("GogoDroid")
+                                                        .setSmallIcon(R.drawable.icon);
+
   Thread monitorConnection = new Thread() {
     @Override
     public void run() {
@@ -41,21 +49,27 @@ public final class GogoService extends Service {
       long sleepPeriod;
 
       try {
-        while(true){
+        while(monitorConnection == Thread.currentThread()){
           sleepPeriod = 2000; // Default value = 2s
           if(lastStatus.startsWith("established")) {
             sleepPeriod = 60000; // 1m
           }
-          Thread.sleep(sleepPeriod);
+          Thread.currentThread().sleep(sleepPeriod);
           oldStatus = lastStatus;
           mBinder.statusConnection();
           if(!oldStatus.equals(lastStatus)) {
-            // TODO: Notification, refreshUI callback
+            // TODO: refreshUI callback
+            if(lastStatus.startsWith("established")) {
+              updateNotification("Connected: " + lastStatus.substring(12, lastStatus.length()), R.drawable.icon);
+            }
+            if(oldStatus.startsWith("established")) {
+              updateNotification("Disconnected", R.drawable.offline);
+            }
           }
           else {
             if(lastStatus.equals("not_available")) {
               // if gogoc is stopped, then no need to monitor connection status
-              break;
+              return;
             }
             if(lastStatus.equals("error")) {
               // TODO: restart gogoc ?
@@ -73,7 +87,9 @@ public final class GogoService extends Service {
     @Override
     public void startGogoc() throws RemoteException {
       ctl.startGogoc();
-      monitorConnection.start();
+      if(!monitorConnection.isAlive()) {
+        monitorConnection.start();
+      }
     }
 
     @Override
@@ -165,6 +181,21 @@ public final class GogoService extends Service {
 
   public static Intent createIntent(Context context) {
     return new Intent(context, GogoService.class);
+  }
+
+  private void updateNotification(CharSequence text, int icon) {
+    Context ctx = getApplicationContext();
+    Intent notificationIntent = new Intent(ctx, GogoDroid.class);
+    notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_FROM_BACKGROUND);
+    PendingIntent contentIntent = PendingIntent.getActivity(ctx, notifyID, notificationIntent,
+                                                            PendingIntent.FLAG_CANCEL_CURRENT);
+    mNotifyBuilder.setContentIntent(contentIntent);
+    mNotifyBuilder.setContentText(text);
+    mNotifyBuilder.setSmallIcon(icon);
+
+    NotificationManager mNotificationManager = 
+      (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    mNotificationManager.notify(notifyID, mNotifyBuilder.build());
   }
 
 }

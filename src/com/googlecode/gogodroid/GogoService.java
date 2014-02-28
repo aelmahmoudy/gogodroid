@@ -53,7 +53,8 @@ public final class GogoService extends Service {
 
     @Override
     public String statusConnection() throws RemoteException {
-      return(ctl.statusConnection());
+      lastStatus = ctl.statusConnection();
+      return(lastStatus);
     }
 
     @Override
@@ -70,7 +71,7 @@ public final class GogoService extends Service {
     public void stateChanged() throws RemoteException {
       ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
       NetworkInfo activeInfo = connMgr.getActiveNetworkInfo();
-      SharedPreferences sharedPref = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+      SharedPreferences sharedPref = getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE);
       boolean autoConnect = sharedPref.getBoolean("auto_connect", false);
 
       if((activeInfo != null) && activeInfo.isConnected()) {
@@ -84,10 +85,16 @@ public final class GogoService extends Service {
         }
       }
       else if(statusGogoc()) { // Connection unavailable & gogoc is running
-        // stop gogoc unless this is just a failover. (just wait for the next 
-        // broadcast after failover):
-        if((activeInfo != null) && !activeInfo.isFailover()) {
+        // stop gogoc unless this is just a failover or there is a connection 
+        // attempt. (just wait for the next broadcast after failover):
+        if((activeInfo == null) || !activeInfo.isAvailable() || 
+           (!activeInfo.isFailover() && 
+            !activeInfo.isConnectedOrConnecting())) {
           stopGogoc();
+          // TODO: finish() ?
+        }
+        else {
+          // TODO: if isAvailable(): end after some user-defined timeout ?
         }
       }
     }

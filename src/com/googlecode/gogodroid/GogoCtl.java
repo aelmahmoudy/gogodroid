@@ -175,7 +175,7 @@ public class GogoCtl {
 
     // create gogoc.conf
     if( ! gogoc_conf.exists() ) {
-      showToast(R.string.conf_not_exists);
+      Log.d(Constants.LOG_TAG, "config not exist, using default");
       for (int i=0; i< Constants.DEFAULT_CONF.length; i++){
         Config += Constants.DEFAULT_CONF[i] + "\n";
       }
@@ -192,7 +192,7 @@ public class GogoCtl {
       in.close();
     }
     catch (Exception ex) {
-      showToast(R.string.cant_read_conf);
+      Log.d(Constants.LOG_TAG, "Cannot read gogoc.conf");
       return Config;
     }
 
@@ -273,7 +273,7 @@ public class GogoCtl {
     if(!gogoc_binary.exists())
     {
       copyRaw(R.raw.gogoc, (Constants.GOGOC_BIN));
-      showToast(R.string.binary_installed);
+      Log.d(Constants.LOG_TAG, "Gogoc binary installed");
     }
     
     // change permission to executable

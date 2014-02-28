@@ -74,17 +74,6 @@ public class GogoDroid extends Activity {
             Log.d(Constants.LOG_TAG, "onCreate() Gogoc started.");
             linkstatus = mGogoService.statusConnection();
             showIndicator(linkstatus);
-            /*try {
-              // TODO: move to a service ?
-              while(true){
-                Thread.sleep(2000);
-                if(statusConnection()=="established")
-                  break;
-                }
-            }
-            catch (Exception e) {
-              e.printStackTrace();
-            }*/
             setResult(android.app.Activity.RESULT_OK);
             ((Button) v).setText(R.string.btn_stop);
           }

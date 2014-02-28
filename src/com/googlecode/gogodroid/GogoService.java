@@ -34,11 +34,46 @@ public final class GogoService extends Service {
   private GogoCtl ctl;
   private String lastStatus = "";
   private static final String LOGTAG = GogoService.class.getName();
+  Thread monitorConnection = new Thread() {
+    @Override
+    public void run() {
+      String oldStatus;
+      long sleepPeriod;
+
+      try {
+        while(true){
+          sleepPeriod = 2000; // Default value = 2s
+          if(lastStatus.startsWith("established")) {
+            sleepPeriod = 60000; // 1m
+          }
+          Thread.sleep(sleepPeriod);
+          oldStatus = lastStatus;
+          mBinder.statusConnection();
+          if(!oldStatus.equals(lastStatus)) {
+            // TODO: Notification, refreshUI callback
+          }
+          else {
+            if(lastStatus.equals("not_available")) {
+              // if gogoc is stopped, then no need to monitor connection status
+              break;
+            }
+            if(lastStatus.equals("error")) {
+              // TODO: restart gogoc ?
+            }
+          }
+        }
+      }
+      catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+  };
 
   private final GogoServiceIface.Stub mBinder = new GogoServiceIface.Stub() {
     @Override
     public void startGogoc() throws RemoteException {
       ctl.startGogoc();
+      monitorConnection.start();
     }
 
     @Override

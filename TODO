@@ -1,0 +1,9 @@
+* Notification
+* background status check after startGogo, user a looper ?
+  ** add callback function in mainactivity to refreshUI (also called after network status change)
+* End after some user-defined timeout if: isAvailable() && !(ifFailover() || (isConnectedOrConnecting() && !isConnected()))
+* Add config params (server,username,password,...) as settings
+  ** Advanced custom settings can be set as in OpenVPN
+  ** loadConf can be used to import settings from a file (would require disk access)
+* convert Menu -> ActionBar ?
+* Display tail -f log in main activity ?

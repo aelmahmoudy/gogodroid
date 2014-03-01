@@ -47,7 +47,6 @@ public class GogoDroid extends Activity {
   Button btnStartStop;
   EditText gogocConfig;
   EditText currentIP;
-  TextView conftxt;
   String linkstatus;
   private ServiceConnection mConnection;
   private GogoServiceIface mGogoService;
@@ -74,7 +73,6 @@ public class GogoDroid extends Activity {
     StatusRunning = (RadioButton) findViewById(R.id.Running);
     gogocConfig = (EditText) findViewById(R.id.GogocConf);
     currentIP = (EditText) findViewById(R.id.Address);
-    conftxt = (TextView) findViewById(R.id.ConfText);
     btnStartStop = (Button) findViewById(R.id.ButtonStartStop);
     btnStartStop.setOnClickListener(new OnClickListener() {
       public void onClick(View v) {
@@ -198,7 +196,6 @@ public class GogoDroid extends Activity {
     try{
       if( !mGogoService.statusGogoc()) {
         // save conf in file
-        mGogoService.saveConf( gogocConfig.getText().toString() );
         mGogoService.startGogoc();
       }
       else {

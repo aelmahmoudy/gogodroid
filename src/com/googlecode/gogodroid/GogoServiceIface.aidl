@@ -6,6 +6,5 @@ interface GogoServiceIface {
     boolean statusGogoc();
     String statusConnection();
     String loadConf();
-    void saveConf(String conf);
     void stateChanged();
 }

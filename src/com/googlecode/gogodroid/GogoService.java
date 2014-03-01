@@ -48,6 +48,7 @@ public final class GogoService extends Service {
   private final GogoServiceIface.Stub mBinder = new GogoServiceIface.Stub() {
     @Override
     public void startGogoc() throws RemoteException {
+      saveConf();
       ctl.startGogoc();
 
       monitorConnection = new Thread() {
@@ -66,7 +67,6 @@ public final class GogoService extends Service {
               oldStatus = lastStatus;
               statusConnection();
               if(!oldStatus.equals(lastStatus)) {
-                // TODO: refreshUI callback
                 if(lastStatus.startsWith("established")) {
                   updateNotification("Connected: " + lastStatus.substring(12, lastStatus.length()), R.drawable.icon);
                   sendBroadcast(refreshIntent);
@@ -120,11 +120,6 @@ public final class GogoService extends Service {
     }
 
     @Override
-    public void saveConf(String conf) throws RemoteException {
-      ctl.saveConf(conf);
-    }
-
-    @Override
     public void stateChanged() throws RemoteException {
       ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
       NetworkInfo activeInfo = connMgr.getActiveNetworkInfo();
@@ -148,12 +143,27 @@ public final class GogoService extends Service {
            (!activeInfo.isFailover() && 
             !activeInfo.isConnectedOrConnecting())) {
           stopGogoc();
-          // TODO: finish() ?
         }
         else {
           // TODO: if isAvailable(): end after some user-defined timeout ?
         }
       }
+    }
+
+    private void saveConf() {
+      StringBuilder conf = new StringBuilder();
+      SharedPreferences sharedPref = getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE);
+
+      conf.append("server=" + sharedPref.getString("server", Constants.DEFAULT_SERVER) + "\n");
+      String auth_method = sharedPref.getString("auth_method", "anonymous");
+      if(!auth_method.equals("anonymous")) {
+        conf.append("auth_method=" + auth_method + "\n");
+        conf.append("userid=" + sharedPref.getString("userid", "") + "\n");
+        conf.append("passwd=" + sharedPref.getString("passwd", "") + "\n");
+      }
+      conf.append(sharedPref.getString("custom", "") + "\n");
+
+      ctl.saveConf(conf.toString());
     }
   };
 

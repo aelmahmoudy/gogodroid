@@ -4,7 +4,8 @@
 * End after some user-defined timeout if: isAvailable() && !(ifFailover() || (isConnectedOrConnecting() && !isConnected()))
   -> Use CountDownTimer or AlarmManager
 * Add config params (server,username,password,...) as settings
-  ** Advanced custom settings can be set as in OpenVPN
+  ** implement SharedPreferenes.OnSharedPreferenceChangeListener to call saveConf()
+  ** Select advanced settings to add into shared prefs
   ** loadConf can be used to import settings from a file (would require disk access)
 * convert Menu -> ActionBar ?
 * Display tail -f log in main activity ?

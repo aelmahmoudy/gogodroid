@@ -95,6 +95,9 @@ public final class GogoService extends Service {
     @Override
     public void stopGogoc() throws RemoteException {
       ctl.stopGogoc();
+      NotificationManager mNotificationManager = 
+        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+      mNotificationManager.cancel(notifyID);
     }
 
     @Override

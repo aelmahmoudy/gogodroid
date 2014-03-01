@@ -1,5 +1,4 @@
-* Notification
-  ** Cancel notification on stop
+* Notification v4 compat ?
 * background status check after startGogo, user a looper ?
   ** add callback function in mainactivity to refreshUI (also called after network status change)
 * End after some user-defined timeout if: isAvailable() && !(ifFailover() || (isConnectedOrConnecting() && !isConnected()))

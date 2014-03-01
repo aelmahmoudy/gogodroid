@@ -42,54 +42,54 @@ public final class GogoService extends Service {
                                                         .setContentTitle("GogoDroid")
                                                         .setSmallIcon(R.drawable.icon);
 
-  Thread monitorConnection = new Thread() {
-    @Override
-    public void run() {
-      String oldStatus;
-      long sleepPeriod;
-
-      try {
-        while(monitorConnection == Thread.currentThread()){
-          sleepPeriod = 2000; // Default value = 2s
-          if(lastStatus.startsWith("established")) {
-            sleepPeriod = 60000; // 1m
-          }
-          Thread.currentThread().sleep(sleepPeriod);
-          oldStatus = lastStatus;
-          mBinder.statusConnection();
-          if(!oldStatus.equals(lastStatus)) {
-            // TODO: refreshUI callback
-            if(lastStatus.startsWith("established")) {
-              updateNotification("Connected: " + lastStatus.substring(12, lastStatus.length()), R.drawable.icon);
-            }
-            if(oldStatus.startsWith("established")) {
-              updateNotification("Disconnected", R.drawable.offline);
-            }
-          }
-          else {
-            if(lastStatus.equals("not_available")) {
-              // if gogoc is stopped, then no need to monitor connection status
-              return;
-            }
-            if(lastStatus.equals("error")) {
-              // TODO: restart gogoc ?
-            }
-          }
-        }
-      }
-      catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-  };
+  Thread monitorConnection;
 
   private final GogoServiceIface.Stub mBinder = new GogoServiceIface.Stub() {
     @Override
     public void startGogoc() throws RemoteException {
       ctl.startGogoc();
-      if(!monitorConnection.isAlive()) {
-        monitorConnection.start();
-      }
+
+      monitorConnection = new Thread() {
+        @Override
+        public void run() {
+          String oldStatus;
+          long sleepPeriod;
+
+          try {
+            while(monitorConnection == Thread.currentThread()){
+              sleepPeriod = 2000; // Default value = 2s
+              if(lastStatus.startsWith("established")) {
+                sleepPeriod = 60000; // 1m
+              }
+              Thread.currentThread().sleep(sleepPeriod);
+              oldStatus = lastStatus;
+              statusConnection();
+              if(!oldStatus.equals(lastStatus)) {
+                // TODO: refreshUI callback
+                if(lastStatus.startsWith("established")) {
+                  updateNotification("Connected: " + lastStatus.substring(12, lastStatus.length()), R.drawable.icon);
+                }
+                if(oldStatus.startsWith("established")) {
+                  updateNotification("Disconnected", R.drawable.offline);
+                }
+              }
+              else {
+                if(lastStatus.equals("not_available")) {
+                  // if gogoc is stopped, then no need to monitor connection status
+                  break;
+                }
+                if(lastStatus.equals("error")) {
+                  // TODO: restart gogoc ?
+                }
+              }
+            }
+          }
+          catch (Exception e) {
+            e.printStackTrace();
+          }
+        }
+      };
+      monitorConnection.start();
     }
 
     @Override

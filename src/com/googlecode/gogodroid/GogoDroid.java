@@ -45,8 +45,8 @@ public class GogoDroid extends Activity {
 
   RadioButton StatusRunning;
   Button btnStartStop;
-  EditText gogocConfig;
-  EditText currentIP;
+  TextView gogocConfig;
+  TextView currentIP;
   String linkstatus;
   private ServiceConnection mConnection;
   private GogoServiceIface mGogoService;
@@ -71,8 +71,8 @@ public class GogoDroid extends Activity {
   @Override
   public void onContentChanged() {
     StatusRunning = (RadioButton) findViewById(R.id.Running);
-    gogocConfig = (EditText) findViewById(R.id.GogocConf);
-    currentIP = (EditText) findViewById(R.id.Address);
+    gogocConfig = (TextView) findViewById(R.id.GogocConf);
+    currentIP = (TextView) findViewById(R.id.Address);
     btnStartStop = (Button) findViewById(R.id.ButtonStartStop);
     btnStartStop.setOnClickListener(new OnClickListener() {
       public void onClick(View v) {
@@ -245,25 +245,21 @@ public class GogoDroid extends Activity {
       currentIP.setText( R.string.not_available );
       StatusRunning.setPressed(false);
       StatusRunning.setChecked(false);
-      gogocConfig.setFocusable(true);
     }
     if (status.equals("connecting")){
       currentIP.setText(R.string.gogoc_connecting);
       StatusRunning.setPressed(true);
       StatusRunning.setChecked(false);
-      gogocConfig.setFocusable(false);
     }
     if (status.startsWith("established")){
       currentIP.setText(status.substring(12, status.length()));
       StatusRunning.setPressed(false);
       StatusRunning.setChecked(true);
-      gogocConfig.setFocusable(false);
     }
     if (status.equals("error")){
       currentIP.setText(R.string.status_error);
       StatusRunning.setPressed(false);
       StatusRunning.setChecked(false);
-      gogocConfig.setFocusable(true);
     }
   }
 

@@ -90,7 +90,6 @@ public class GogoDroid extends Activity {
         mGogoService = GogoServiceIface.Stub.asInterface(binder);
         mBound = true;
         refreshUI();
-        registerReceiver(refreshReceiver, new IntentFilter(Constants.RefreshUIAction));
       }
 
       @Override
@@ -100,6 +99,7 @@ public class GogoDroid extends Activity {
       }
     };
     bindService(GogoService.createIntent(this), mConnection, Context.BIND_AUTO_CREATE);
+    registerReceiver(refreshReceiver, new IntentFilter(Constants.RefreshUIAction));
   }
 
   @Override

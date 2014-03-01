@@ -43,6 +43,7 @@ public final class GogoService extends Service {
                                                         .setSmallIcon(R.drawable.icon);
 
   Thread monitorConnection;
+  Intent refreshIntent;
 
   private final GogoServiceIface.Stub mBinder = new GogoServiceIface.Stub() {
     @Override
@@ -68,9 +69,11 @@ public final class GogoService extends Service {
                 // TODO: refreshUI callback
                 if(lastStatus.startsWith("established")) {
                   updateNotification("Connected: " + lastStatus.substring(12, lastStatus.length()), R.drawable.icon);
+                  sendBroadcast(refreshIntent);
                 }
                 if(oldStatus.startsWith("established")) {
                   updateNotification("Disconnected", R.drawable.offline);
+                  sendBroadcast(refreshIntent);
                 }
               }
               else {
@@ -161,6 +164,7 @@ public final class GogoService extends Service {
     Log.d("GogoService", "created");
     ctl = new GogoCtl(this);
     ctl.init();
+    refreshIntent = new Intent(Constants.RefreshUIAction);
   }
 
   @Override

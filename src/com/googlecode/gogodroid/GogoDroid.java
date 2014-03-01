@@ -25,6 +25,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.ComponentName;
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -50,6 +52,7 @@ public class GogoDroid extends Activity {
   private ServiceConnection mConnection;
   private GogoServiceIface mGogoService;
   private boolean mBound;
+  private BroadcastReceiver refreshReceiver;
 
   /** Called when the activity is first created. */
   @Override
@@ -67,6 +70,14 @@ public class GogoDroid extends Activity {
         startStopGogoc();
       }
     });
+
+    refreshReceiver = new BroadcastReceiver() {
+      @Override
+      public void onReceive(Context context, Intent intent) {
+        Log.d(Constants.LOG_TAG, "Received refreshUI request");
+        refreshUI();
+      }
+    };
   
   }
 
@@ -79,6 +90,7 @@ public class GogoDroid extends Activity {
         mGogoService = GogoServiceIface.Stub.asInterface(binder);
         mBound = true;
         refreshUI();
+        registerReceiver(refreshReceiver, new IntentFilter(Constants.RefreshUIAction));
       }
 
       @Override
@@ -93,6 +105,7 @@ public class GogoDroid extends Activity {
   @Override
   protected void onStop() {
     super.onStop();
+    unregisterReceiver(refreshReceiver);
     if (mBound) {
       unbindService(mConnection);
       mBound = false;

@@ -1,6 +1,6 @@
 * Notification v4 compat ?
 * background status check after startGogo, user a looper ?
-  ** add callback function in mainactivity to refreshUI (also called after network status change)
+  ** How to specify refreshReceiver only to receive refreshUI broadcast ?
 * End after some user-defined timeout if: isAvailable() && !(ifFailover() || (isConnectedOrConnecting() && !isConnected()))
   -> Use CountDownTimer or AlarmManager
 * Add config params (server,username,password,...) as settings

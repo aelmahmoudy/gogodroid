@@ -29,5 +29,6 @@ public class Constants {
 	public static final String IF_INET6 = "/proc/net/if_inet6";
 	public static final String [] DEFAULT_CONF = {"server=anonymous.freenet6.net"};
   public static final String PREFS_FILE = "preferences";
+  public static final String RefreshUIAction = "GogoDroidRefreshUI";
 
 }

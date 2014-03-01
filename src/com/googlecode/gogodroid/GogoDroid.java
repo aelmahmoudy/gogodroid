@@ -64,31 +64,7 @@ public class GogoDroid extends Activity {
     btnStartStop = (Button) findViewById(R.id.ButtonStartStop);
     btnStartStop.setOnClickListener(new OnClickListener() {
       public void onClick(View v) {
-    
-        try{
-          if( !mGogoService.statusGogoc()) {
-            // save conf in file
-            mGogoService.saveConf( gogocConfig.getText().toString() );
-            mGogoService.startGogoc();
-            //mGogoService.showToast(R.string.gogoc_started);
-            Log.d(Constants.LOG_TAG, "onCreate() Gogoc started.");
-            linkstatus = mGogoService.statusConnection();
-            showIndicator(linkstatus);
-            setResult(android.app.Activity.RESULT_OK);
-            ((Button) v).setText(R.string.btn_stop);
-          }
-          else {
-            mGogoService.stopGogoc();
-            linkstatus = mGogoService.statusConnection();
-            showIndicator(linkstatus);
-            //mGogoService.showToast(R.string.gogoc_stopped);
-            setResult(android.app.Activity.RESULT_OK);
-            ((Button) v).setText(R.string.btn_start);
-          }
-        }
-        catch (RemoteException e) {
-          Log.e(Constants.LOG_TAG, "", e);
-        }
+        startStopGogoc();
       }
     });
   
@@ -127,6 +103,11 @@ public class GogoDroid extends Activity {
   public boolean onCreateOptionsMenu(Menu menu) {
     // Inflate the menu; this adds items to the action bar if it is present.
     getMenuInflater().inflate(R.menu.main, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onPrepareOptionsMenu(Menu menu) {
     MenuItem startStopItem = menu.findItem(R.id.start_stop);
     try {
       if( mGogoService.statusGogoc()) {
@@ -164,7 +145,7 @@ public class GogoDroid extends Activity {
         //mGogoService.showToast(R.string.dns_changed);
         return true;
       case R.id.start_stop:
-        //item.setTitle(R.string.btn_stop);
+        startStopGogoc();
         return true;
       default:
         return super.onOptionsItemSelected(item);
@@ -191,6 +172,23 @@ public class GogoDroid extends Activity {
       e.printStackTrace();
     }
 
+  }
+
+  private void startStopGogoc() {
+    try{
+      if( !mGogoService.statusGogoc()) {
+        // save conf in file
+        mGogoService.saveConf( gogocConfig.getText().toString() );
+        mGogoService.startGogoc();
+      }
+      else {
+        mGogoService.stopGogoc();
+      }
+      refreshUI();
+    }
+    catch (RemoteException e) {
+      Log.e(Constants.LOG_TAG, "", e);
+    }
   }
 
   private void refreshUI() {

@@ -58,18 +58,6 @@ public class GogoDroid extends Activity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.main);
-    
-    StatusRunning = (RadioButton) findViewById(R.id.Running);
-    gogocConfig = (EditText) findViewById(R.id.GogocConf);
-    currentIP = (EditText) findViewById(R.id.Address);
-    conftxt = (TextView) findViewById(R.id.ConfText);
-    btnStartStop = (Button) findViewById(R.id.ButtonStartStop);
-    btnStartStop.setOnClickListener(new OnClickListener() {
-      public void onClick(View v) {
-        startStopGogoc();
-      }
-    });
 
     refreshReceiver = new BroadcastReceiver() {
       @Override
@@ -82,6 +70,22 @@ public class GogoDroid extends Activity {
   }
 
   @Override
+  public void onContentChanged() {
+    StatusRunning = (RadioButton) findViewById(R.id.Running);
+    gogocConfig = (EditText) findViewById(R.id.GogocConf);
+    currentIP = (EditText) findViewById(R.id.Address);
+    conftxt = (TextView) findViewById(R.id.ConfText);
+    btnStartStop = (Button) findViewById(R.id.ButtonStartStop);
+    btnStartStop.setOnClickListener(new OnClickListener() {
+      public void onClick(View v) {
+        startStopGogoc();
+      }
+    });
+
+    refreshUI();
+  }
+
+  @Override
   protected void onStart() {
     super.onStart();
     mConnection = new ServiceConnection() {
@@ -89,7 +93,7 @@ public class GogoDroid extends Activity {
       public void onServiceConnected(ComponentName className, IBinder binder) {
         mGogoService = GogoServiceIface.Stub.asInterface(binder);
         mBound = true;
-        refreshUI();
+        setContentView(R.layout.main);
       }
 
       @Override
@@ -121,6 +125,9 @@ public class GogoDroid extends Activity {
 
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
+    if(!mBound) {
+      return(false);
+    }
     MenuItem startStopItem = menu.findItem(R.id.start_stop);
     try {
       if( mGogoService.statusGogoc()) {

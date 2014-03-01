@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="Settings"
-    android:title="Settings" >
+    android:title="@string/settings" >
 
+  <PreferenceCategory android:title="@string/general">
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="auto_connect"
@@ -10,5 +11,43 @@
         android:summaryOn="@string/is_auto_connect"
         android:title="@string/auto_connect" >
     </CheckBoxPreference>
+  </PreferenceCategory>
+
+  <PreferenceCategory android:title="@string/gogoc_basic">
+    <EditTextPreference
+      android:key="server"
+      android:defaultValue="anonymous.freenet6.net"
+      android:title="@string/server"
+      android:singleLine="true"
+      android:summary="@string/server_summary"
+      android:dialogMessage="@string/server_dialog" />
+    <ListPreference
+      android:key="auth_method"
+      android:defaultValue="anonymous"
+      android:entries="@array/auth_method_entries"
+      android:entryValues="@array/auth_method_values"
+      android:title="@string/auth_method"
+      android:summary="@string/auth_method_summary" />
+    <EditTextPreference
+      android:key="userid"
+      android:title="@string/userid"
+      android:singleLine="true"
+      android:enabled="false" />
+    <EditTextPreference
+      android:key="passwd"
+      android:title="@string/passwd"
+      android:password="true"
+      android:singleLine="true"
+      android:enabled="false" />
+  </PreferenceCategory>
+
+  <PreferenceCategory android:title="@string/gogoc_advanced">
+    <EditTextPreference
+      android:key="custom"
+      android:title="@string/custom"
+      android:minLines="2"
+      android:maxLines="5"
+      android:summary="@string/custom_summary" />
+  </PreferenceCategory>
 
 </PreferenceScreen>

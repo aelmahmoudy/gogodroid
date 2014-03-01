@@ -23,10 +23,29 @@
 	<string name="tun_not_supported_details">Your device not support TUN.\nView project home page for details.\nhttp://gogodroid.googlecode.com/</string>
 	<string name="busybox_not_installed">BusyBox not installed</string>
 	<string name="busybox_not_installed_details">BusyBox not installed on your device. You can ignore this message, buy may causes gogoc refused to start.</string>
+	<string name="action_preferences">Settings</string>
+	<string name="action_exit">Quit</string>
+  <!-- Preferences -->
 	<string name="is_auto_connect">Auto connect if internet connectivity available.</string>
 	<string name="is_not_auto_connect">Do not auto connect.</string>
 	<string name="auto_connect">Auto connect</string>
-	<string name="action_preferences">Settings</string>
-	<string name="action_exit">Quit</string>
+	<string name="settings">Settings</string>
+	<string name="general">General</string>
+	<string name="gogoc_basic">Gogoc basic settings</string>
+	<string name="server">Server</string>
+	<string name="server_summary">Name and port number of the tunnel server</string>
+	<string name="server_dialog">host[:port]. Default TSP port is 3653</string>
+	<string name="auth_method">Authentication method</string>
+	<string name="auth_method_summary">Tunnel negotiation authentication method. If not anonymous, "any" will use the most secure common mechanism to the client and the broker.</string>
+	<string name="auth_method_anonymous">Anonymous</string>
+	<string name="auth_method_any">Any</string>
+	<string name="auth_method_digest_md5">Digest MD5</string>
+	<string name="auth_method_passdss_3des_1">DSS secured password</string>
+	<string name="auth_method_plain">Plain</string>
+	<string name="userid">Username</string>
+	<string name="passwd">Password</string>
+	<string name="gogoc_advanced">Gogoc advanced settings</string>
+	<string name="custom">Custom configuration</string>
+	<string name="custom_summary">Use with caution !</string>
 	
 </resources>

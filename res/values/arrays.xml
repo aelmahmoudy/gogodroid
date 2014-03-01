@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string-array name="auth_method_entries">
+    <item>@string/auth_method_anonymous</item>
+    <item>@string/auth_method_any</item>
+    <item>@string/auth_method_digest_md5</item>
+    <item>@string/auth_method_passdss_3des_1</item>
+    <item>@string/auth_method_plain</item>
+  </string-array>
+  <string-array name="auth_method_values">
+    <item>anonymous</item>
+    <item>any</item>
+    <item>digest-md5</item>
+    <item>passdss-3des-1</item>
+    <item>plain</item>
+  </string-array>
+
+</resources>

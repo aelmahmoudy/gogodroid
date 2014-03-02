@@ -78,10 +78,12 @@ public final class GogoService extends Service {
                 Log.d(LOG_TAG, "monitorConnection status changed" + oldStatus + "->" + lastStatus);
                 sendBroadcast(refreshIntent);
                 if(lastStatus.startsWith("established")) {
-                  updateNotification("Connected: " + lastStatus.substring(12, lastStatus.length()), R.drawable.gogo6_icon);
+                  updateNotification(getApplication().getString(R.string.notif_connected, lastStatus.substring(12, lastStatus.length())),
+                                     R.drawable.gogo6_icon);
                 }
                 if(oldStatus.startsWith("established")) {
-                  updateNotification("Disconnected", R.drawable.gogo6_offline);
+                  updateNotification(getApplication().getString(R.string.notif_disconnected),
+                                     R.drawable.gogo6_offline);
                 }
               }
               else {

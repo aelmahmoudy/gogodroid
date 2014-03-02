@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   version="1.1"
+   width="100%"
+   height="100%"
+   viewBox="-147 -68 294 343"
+   id="svg3079">
+  <metadata
+     id="metadata3110">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs3108" />
+  <g
+     id="g3081"
+     style="fill:#a4c639">
+    <use
+       id="use3083"
+       style="stroke:#ffffff;stroke-width:14.39999962"
+       x="0"
+       y="0"
+       width="294"
+       height="343"
+       xlink:href="#b" />
+    <use
+       transform="scale(-1,1)"
+       id="use3085"
+       x="0"
+       y="0"
+       width="294"
+       height="343"
+       xlink:href="#a" />
+    <g
+       id="a"
+       style="stroke:#ffffff;stroke-width:7.19999981">
+      <rect
+         width="13"
+         height="86"
+         rx="6.5"
+         x="14"
+         y="-86"
+         transform="matrix(0.87461971,0.48480962,-0.48480962,0.87461971,0,0)"
+         id="rect3088" />
+      <rect
+         width="48"
+         height="133"
+         rx="24"
+         x="-143"
+         y="41"
+         id="c" />
+      <use
+         id="use3091"
+         x="85"
+         y="97"
+         width="294"
+         height="343"
+         xlink:href="#c" />
+    </g>
+    <g
+       id="b">
+      <ellipse
+         cx="0"
+         cy="41"
+         rx="91"
+         ry="84"
+         id="ellipse3094" />
+      <rect
+         width="182"
+         height="182"
+         rx="22"
+         x="-91"
+         y="20"
+         id="rect3096" />
+    </g>
+  </g>
+  <g
+     id="g3098"
+     style="fill:#ffffff;stroke:#ffffff;stroke-width:7.19999981">
+    <path
+       d="M -95,44.5 H 95"
+       id="path3100" />
+    <circle
+       cx="-42"
+       cy="0"
+       r="4"
+       id="circle3102" />
+    <circle
+       cx="42"
+       cy="0"
+       r="4"
+       id="circle3104" />
+  </g>
+  <text
+     x="-54.015236"
+     y="193.95932"
+     transform="scale(1.0581927,0.94500747)"
+     id="text3112"
+     xml:space="preserve"
+     style="font-size:164.81298828px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Trebuchet MS;-inkscape-font-specification:Trebuchet MS Bold Italic"><tspan
+       x="-54.015236"
+       y="193.95932"
+       id="tspan3114">6</tspan></text>
+</svg>

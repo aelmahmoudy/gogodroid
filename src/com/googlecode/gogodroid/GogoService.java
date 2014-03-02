@@ -40,7 +40,7 @@ public final class GogoService extends Service {
   private static final int notifyID = 1;
   private Notification.Builder mNotifyBuilder = new Notification.Builder(this)
                                                         .setContentTitle("GogoDroid")
-                                                        .setSmallIcon(R.drawable.icon);
+                                                        .setSmallIcon(R.drawable.gogo6_icon);
 
   Thread monitorConnection;
   Intent refreshIntent;
@@ -69,10 +69,10 @@ public final class GogoService extends Service {
               if(!oldStatus.equals(lastStatus)) {
                 sendBroadcast(refreshIntent);
                 if(lastStatus.startsWith("established")) {
-                  updateNotification("Connected: " + lastStatus.substring(12, lastStatus.length()), R.drawable.icon);
+                  updateNotification("Connected: " + lastStatus.substring(12, lastStatus.length()), R.drawable.gogo6_icon);
                 }
                 if(oldStatus.startsWith("established")) {
-                  updateNotification("Disconnected", R.drawable.offline);
+                  updateNotification("Disconnected", R.drawable.gogo6_offline);
                 }
               }
               else {

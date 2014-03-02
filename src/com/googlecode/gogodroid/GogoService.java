@@ -36,7 +36,7 @@ public final class GogoService extends Service {
 
   private GogoCtl ctl;
   private String lastStatus = "";
-  private static final String LOGTAG = GogoService.class.getName();
+  private static final String LOG_TAG = GogoService.class.getName();
   private static final int notifyID = 1;
   private Notification.Builder mNotifyBuilder = new Notification.Builder(this)
                                                         .setContentTitle("GogoDroid")
@@ -49,6 +49,7 @@ public final class GogoService extends Service {
     @Override
     public void startGogoc() throws RemoteException {
       saveConf();
+      Log.d(LOG_TAG, "starting gogoc");
       ctl.startGogoc();
 
       monitorConnection = new Thread() {
@@ -58,15 +59,23 @@ public final class GogoService extends Service {
           long sleepPeriod;
 
           try {
+            Log.d(LOG_TAG, "monitorConnection thread started");
             while(monitorConnection == Thread.currentThread()){
               sleepPeriod = 2000; // Default value = 2s
               if(lastStatus.startsWith("established")) {
                 sleepPeriod = 60000; // 1m
               }
-              Thread.currentThread().sleep(sleepPeriod);
+              try {
+                sleep(sleepPeriod);
+              }
+              catch (Exception e) {
+                Log.e(LOG_TAG, "monitorConnection thread exception", e);
+                e.printStackTrace();
+              }
               oldStatus = lastStatus;
               statusConnection();
               if(!oldStatus.equals(lastStatus)) {
+                Log.d(LOG_TAG, "monitorConnection status changed" + oldStatus + "->" + lastStatus);
                 sendBroadcast(refreshIntent);
                 if(lastStatus.startsWith("established")) {
                   updateNotification("Connected: " + lastStatus.substring(12, lastStatus.length()), R.drawable.gogo6_icon);
@@ -78,6 +87,7 @@ public final class GogoService extends Service {
               else {
                 if(lastStatus.equals("not_available")) {
                   // if gogoc is stopped, then no need to monitor connection status
+                  Log.d(LOG_TAG, "montionConnection thread break");
                   break;
                 }
                 if(lastStatus.equals("error")) {
@@ -96,6 +106,7 @@ public final class GogoService extends Service {
 
     @Override
     public void stopGogoc() throws RemoteException {
+      Log.d(LOG_TAG, "stopping gogoc");
       ctl.stopGogoc();
       NotificationManager mNotificationManager = 
         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -170,7 +181,7 @@ public final class GogoService extends Service {
   public void onCreate() {
     super.onCreate();
 
-    Log.d("GogoService", "created");
+    Log.d(LOG_TAG, "service created");
     ctl = new GogoCtl(this);
     ctl.init();
     refreshIntent = new Intent(Constants.RefreshUIAction);
@@ -180,6 +191,7 @@ public final class GogoService extends Service {
   public int onStartCommand(Intent intent, int flags, int startId) {
     super.onStartCommand(intent, flags, startId);
 
+    Log.d(LOG_TAG, "onStartCommand");
     try {
       mBinder.stateChanged();
     }

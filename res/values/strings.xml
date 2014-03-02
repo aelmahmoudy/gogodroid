@@ -7,13 +7,7 @@
 	<string name="btn_stop">Stop</string>
 	<string name="btn_dns">Set DNS</string>
   <string name="btn_ok">OK</string>
-  <string name="gogoc_started">Gogoc started.</string>
-	<string name="gogoc_stopped">Gogoc stopped.</string>
 	<string name="dns_changed">DNS Changed.</string>
-  <string name="connection_established">Connection established.</string>
-  <string name="binary_installed">Gogoc binary installed.</string>
-  <string name="gogoc_already_running">Gogoc already running.</string>
-  <string name="gogoc_not_running">Gogoc is not running.</string>
   <string name="cant_read_conf">Cannot read gogoc.conf</string>
 	<string name="conf_not_exists">config not exist, using default.</string>
 	<string name="not_available">IPv6 not available.</string>

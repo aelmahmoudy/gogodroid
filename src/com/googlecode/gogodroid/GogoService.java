@@ -67,13 +67,12 @@ public final class GogoService extends Service {
               oldStatus = lastStatus;
               statusConnection();
               if(!oldStatus.equals(lastStatus)) {
+                sendBroadcast(refreshIntent);
                 if(lastStatus.startsWith("established")) {
                   updateNotification("Connected: " + lastStatus.substring(12, lastStatus.length()), R.drawable.icon);
-                  sendBroadcast(refreshIntent);
                 }
                 if(oldStatus.startsWith("established")) {
                   updateNotification("Disconnected", R.drawable.offline);
-                  sendBroadcast(refreshIntent);
                 }
               }
               else {

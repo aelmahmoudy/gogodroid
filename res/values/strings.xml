@@ -5,24 +5,27 @@
 	<string name="config_title">Configuration</string>
 	<string name="btn_start">Start</string>
 	<string name="btn_stop">Stop</string>
-	<string name="btn_dns">Set DNS</string><string name="btn_ok">OK</string><string name="gogoc_started">Gogoc started.</string>
+	<string name="btn_dns">Set DNS</string>
+  <string name="btn_ok">OK</string>
+  <string name="gogoc_started">Gogoc started.</string>
 	<string name="gogoc_stopped">Gogoc stopped.</string>
-	<string name="dns_changed">DNS Changed.</string><string name="connection_established">Connection established.</string><string name="binary_installed">Gogoc binary installed.</string><string name="gogoc_already_running">Gogoc already running.</string><string name="gogoc_not_running">Gogoc is not running.</string><string name="cant_read_conf">Cannot read gogoc.conf</string>
+	<string name="dns_changed">DNS Changed.</string>
+  <string name="connection_established">Connection established.</string>
+  <string name="binary_installed">Gogoc binary installed.</string>
+  <string name="gogoc_already_running">Gogoc already running.</string>
+  <string name="gogoc_not_running">Gogoc is not running.</string>
+  <string name="cant_read_conf">Cannot read gogoc.conf</string>
 	<string name="conf_not_exists">config not exist, using default.</string>
-	
-	
-	
-	
-	
-	<string name="not_available">IPv6 not available.</string><string name="gogoc_connecting">Connecting, please wait.</string><string name="status_error">Error ( Unknown error )</string><string name="ipv6_not_supported">IPv6 not supported</string>
+	<string name="not_available">IPv6 not available.</string>
+  <string name="gogoc_connecting">Connecting, please wait.</string>
+  <string name="status_error">Error ( Unknown error )</string>
+  <string name="ipv6_not_supported">IPv6 not supported</string>
 	<string name="ipv6_not_supported_details">Your device not support IPv6.\nView project home page for details.\nhttp://gogodroid.googlecode.com/</string>
-	
-	
-	
 	<string name="tun_not_supported">TUN not supported</string>
 	<string name="tun_not_supported_details">Your device not support TUN.\nView project home page for details.\nhttp://gogodroid.googlecode.com/</string>
 	<string name="busybox_not_installed">BusyBox not installed</string>
 	<string name="busybox_not_installed_details">BusyBox not installed on your device. You can ignore this message, buy may causes gogoc refused to start.</string>
+  <!-- Menu -->
 	<string name="action_preferences">Settings</string>
 	<string name="action_exit">Quit</string>
   <!-- Preferences -->

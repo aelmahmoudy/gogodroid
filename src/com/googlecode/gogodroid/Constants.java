@@ -21,9 +21,9 @@ package com.googlecode.gogodroid;
 
 public class Constants {
 	public static final String LOG_TAG = "Gogoc";
-	public static final String GOGOC_CONF= "/data/data/com.googlecode.gogodroid/files/gogoc.conf";
 	public static final String GOGOC_DIR= "/data/data/com.googlecode.gogodroid/files/";
-	public static final String GOGOC_BIN= "/data/data/com.googlecode.gogodroid/files/gogoc";
+	public static final String GOGOC_CONF= GOGOC_DIR + "gogoc.conf";
+	public static final String GOGOC_BIN= GOGOC_DIR + "gogoc";
 	public static final String DNS1 = "210.51.191.217";
 	public static final String TUNDEV = "/dev/tun";
 	public static final String IF_INET6 = "/proc/net/if_inet6";

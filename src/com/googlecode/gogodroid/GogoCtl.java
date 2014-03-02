@@ -155,7 +155,6 @@ public class GogoCtl {
                                           .replaceAll(":(0000)+", ":")
                                           .replaceFirst("::+", "::");
             linkstatus = "established " + IP6Addr;
-            Log.d(Constants.LOG_TAG, "statusConnection() address=" + IP6Addr);
             break;
           }
         }
@@ -173,12 +172,7 @@ public class GogoCtl {
     String Config="";
     File gogoc_conf = new File (Constants.GOGOC_CONF);
 
-    // create gogoc.conf
     if( ! gogoc_conf.exists() ) {
-      Log.d(Constants.LOG_TAG, "config not exist, using default");
-      for (int i=0; i< Constants.DEFAULT_CONF.length; i++){
-        Config += Constants.DEFAULT_CONF[i] + "\n";
-      }
       return Config;
     }
 
@@ -201,13 +195,12 @@ public class GogoCtl {
 
   public void saveConf(String conf) {
     Writer output = null;
-      try {
-        output = new BufferedWriter(new FileWriter(Constants.GOGOC_CONF));
-        output.write( conf );
-        output.close();
-        Log.d(Constants.LOG_TAG, "saveConf() saved and closed");
-      }
-      catch (Exception e) {
+    try {
+      output = new BufferedWriter(new FileWriter(Constants.GOGOC_CONF));
+      output.write( conf );
+      output.close();
+    }
+    catch (Exception e) {
       e.printStackTrace();
     }
   }
@@ -218,7 +211,6 @@ public class GogoCtl {
     int duration = Toast.LENGTH_LONG;
     Toast toast = Toast.makeText(context, text, duration);
     toast.show();
-    Log.d(Constants.LOG_TAG, "showToast() txt='"+txt+"'");
   }
 
   public void showDialog(int title, int message) {
@@ -239,12 +231,10 @@ public class GogoCtl {
     try{
       Process process = Runtime.getRuntime().exec("ps");
       process.waitFor();
-      
+
       BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
       while ( (temp = stdInput.readLine()) != null ) {
-        //Log.d(Constants.LOG_TAG, "stopGogoc() temp='"+temp+"'");
         if ( temp.contains(Constants.GOGOC_BIN) ) {
-          Log.d(Constants.LOG_TAG, "statusGogoc() temp='"+temp+"'");
           String [] cmdArray = temp.split(" +");
           pid = cmdArray[1];
         }
@@ -254,32 +244,31 @@ public class GogoCtl {
     catch (Exception e) {
       e.printStackTrace();
     }
-    Log.d(Constants.LOG_TAG, "statusGogoc() pid='"+pid+"'");
     return pid;
   }
 
   private void updateBinary() {
     File gogoc_working_folder = new File(Constants.GOGOC_DIR);
     File gogoc_binary = new File(Constants.GOGOC_BIN);
-    
+
     // create gogoc working directory
     if(!gogoc_working_folder.exists())
     {
       Log.d(Constants.LOG_TAG, "Creating "+Constants.GOGOC_DIR+" folder");
       gogoc_working_folder.mkdir();
     }
-    
+
     // install gogoc binary
     if(!gogoc_binary.exists())
     {
       copyRaw(R.raw.gogoc, (Constants.GOGOC_BIN));
       Log.d(Constants.LOG_TAG, "Gogoc binary installed");
     }
-    
+
     // change permission to executable
     Utils.runCommand("if [ ! -x " + Constants.GOGOC_BIN + " ];then chmod 755 " + Constants.GOGOC_BIN + ";fi");
   }
-	
+
 	private void copyRaw(int id,String path)
 	{
 		try {

@@ -211,7 +211,7 @@ public final class GogoService extends Service {
 
     NotificationManager mNotificationManager = 
       (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-    mNotificationManager.notify(notifyID, mNotifyBuilder.build());
+    mNotificationManager.notify(notifyID, mNotifyBuilder.getNotification());
   }
 
 }

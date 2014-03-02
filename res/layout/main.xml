@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical" android:layout_width="fill_parent"
-	android:layout_height="fill_parent" android:padding="6px" android:scrollbarAlwaysDrawVerticalTrack="false">
+	android:layout_height="fill_parent" android:padding="6dp" android:scrollbarAlwaysDrawVerticalTrack="false">
 
 	<TableRow android:layout_height="wrap_content" android:layout_width="fill_parent">
     <TextView
@@ -35,7 +35,7 @@
     android:typeface="monospace" 
     android:focusable="true"
     android:layout_weight="1"
-    android:textSize="16px"
+    android:textSize="12sp"
     android:gravity="top" 
     android:id="@+id/GogocConf" />
 

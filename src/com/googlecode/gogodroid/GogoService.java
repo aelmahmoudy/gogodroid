@@ -44,6 +44,7 @@ public final class GogoService extends Service {
 
   Thread monitorConnection;
   Intent refreshIntent;
+  boolean userStopped = true;
 
   private final GogoServiceIface.Stub mBinder = new GogoServiceIface.Stub() {
     @Override
@@ -51,6 +52,7 @@ public final class GogoService extends Service {
       saveConf();
       Log.d(LOG_TAG, "starting gogoc");
       ctl.startGogoc();
+      userStopped = false;
 
       monitorConnection = new Thread() {
         @Override
@@ -107,8 +109,9 @@ public final class GogoService extends Service {
     }
 
     @Override
-    public void stopGogoc() throws RemoteException {
+    public void stopGogoc(boolean userStop) throws RemoteException {
       Log.d(LOG_TAG, "stopping gogoc");
+      userStopped = userStopped;
       ctl.stopGogoc();
       NotificationManager mNotificationManager = 
         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -143,7 +146,7 @@ public final class GogoService extends Service {
         if(!statusGogoc()) { // gogoc not running
           // Start gogoc if auto_connect is set or gogoc connection was 
           // established or trying to connect:
-          if(autoConnect || lastStatus.startsWith("established") || lastStatus.equals("connecting")) {
+          if(autoConnect || !userStopped) {
             startGogoc();
           }
         }
@@ -154,7 +157,7 @@ public final class GogoService extends Service {
         if((activeInfo == null) || !activeInfo.isAvailable() || 
            (!activeInfo.isFailover() && 
             !activeInfo.isConnectedOrConnecting())) {
-          stopGogoc();
+          stopGogoc(false);
         }
         else {
           // TODO: if isAvailable(): end after some user-defined timeout ?

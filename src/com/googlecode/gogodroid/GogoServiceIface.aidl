@@ -21,7 +21,7 @@ package com.googlecode.gogodroid;
 
 interface GogoServiceIface {
     void startGogoc();
-    void stopGogoc();
+    void stopGogoc(boolean userStop);
     boolean statusGogoc();
     String statusConnection();
     String loadConf();

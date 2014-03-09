@@ -150,7 +150,7 @@ public class GogoDroid extends Activity {
       case R.id.action_exit:
         try {
           if ( mGogoService.statusGogoc()) {
-            mGogoService.stopGogoc();
+            mGogoService.stopGogoc(true);
           }
         }
         catch (RemoteException e) {
@@ -199,7 +199,7 @@ public class GogoDroid extends Activity {
         mGogoService.startGogoc();
       }
       else {
-        mGogoService.stopGogoc();
+        mGogoService.stopGogoc(true);
       }
       refreshUI();
     }

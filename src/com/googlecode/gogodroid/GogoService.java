@@ -225,6 +225,7 @@ public final class GogoService extends Service {
     mNotifyBuilder.setContentIntent(contentIntent);
     mNotifyBuilder.setContentText(text);
     mNotifyBuilder.setSmallIcon(icon);
+    mNotifyBuilder.setAutoCancel(true);
 
     NotificationManager mNotificationManager = 
       (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

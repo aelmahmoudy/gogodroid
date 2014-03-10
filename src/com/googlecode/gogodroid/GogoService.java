@@ -75,7 +75,7 @@ public final class GogoService extends Service {
                 e.printStackTrace();
               }
               oldStatus = lastStatus;
-              statusConnection();
+              statusConnection(true);
               if(!oldStatus.equals(lastStatus)) {
                 Log.d(LOG_TAG, "monitorConnection status changed" + oldStatus + "->" + lastStatus);
                 sendBroadcast(refreshIntent);
@@ -124,7 +124,7 @@ public final class GogoService extends Service {
     }
 
     @Override
-    public String statusConnection() throws RemoteException {
+    public String statusConnection(boolean fromConnThread) throws RemoteException {
       lastStatus = ctl.statusConnection();
       return(lastStatus);
     }

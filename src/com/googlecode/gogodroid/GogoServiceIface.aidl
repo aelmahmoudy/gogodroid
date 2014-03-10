@@ -23,7 +23,7 @@ interface GogoServiceIface {
     void startGogoc();
     void stopGogoc(boolean userStop);
     boolean statusGogoc();
-    String statusConnection();
+    String statusConnection(boolean fromConnThread);
     String loadConf();
     void stateChanged();
 }

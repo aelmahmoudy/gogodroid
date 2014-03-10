@@ -232,7 +232,7 @@ public class GogoDroid extends Activity {
     
     // check gogodroid status
     try {
-      linkstatus = mGogoService.statusConnection();
+      linkstatus = mGogoService.statusConnection(false);
       showIndicator(linkstatus);
     }
     catch (RemoteException e) {

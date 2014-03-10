@@ -71,8 +71,13 @@ public final class GogoService extends Service {
                 sleep(sleepPeriod);
               }
               catch (Exception e) {
-                Log.e(LOG_TAG, "monitorConnection thread exception", e);
-                e.printStackTrace();
+                if(e instanceof InterruptedException) {
+                  Log.d(LOG_TAG, "monitorConnection interrupted");
+                }
+                else {
+                  Log.e(LOG_TAG, "monitorConnection thread exception", e);
+                  e.printStackTrace();
+                }
               }
               oldStatus = lastStatus;
               statusConnection(true);

@@ -1,0 +1,13 @@
+2.0
+===
+  * Build native code for all available ABIs, copy the binary corresponding to
+    the device ABI from assets.
+  * Use shared preferences to hold gogoc configuration, then generate
+    gogoc.conf from there.
+  * Added status notification.
+  * Revamped UI.
+  * Add a background service to auto-reconnect/disconnect according to current
+    network status.
+  * Add an option to auto-connect on device startup.
+  * New icons generated from SVG.
+

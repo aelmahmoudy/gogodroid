@@ -261,7 +261,8 @@ public class GogoCtl {
     // install gogoc binary
     if(!gogoc_binary.exists())
     {
-      copyRaw(R.raw.gogoc, (Constants.GOGOC_BIN));
+      String abi = android.os.Build.CPU_ABI.toLowerCase();
+      copyAsset(abi + "/gogoc", Constants.GOGOC_BIN);
       Log.d(Constants.LOG_TAG, "Gogoc binary installed");
     }
 
@@ -269,10 +270,10 @@ public class GogoCtl {
     Utils.runCommand("if [ ! -x " + Constants.GOGOC_BIN + " ];then chmod 755 " + Constants.GOGOC_BIN + ";fi");
   }
 
-	private void copyRaw(int id,String path)
+	private void copyAsset(String asset, String path)
 	{
 		try {
-			InputStream ins = context.getResources().openRawResource(id);
+			InputStream ins = context.getAssets().open(asset);
 			int size = ins.available();
 
 			// Read the entire resource into a local byte buffer.

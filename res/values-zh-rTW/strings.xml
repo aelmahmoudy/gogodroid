@@ -5,9 +5,6 @@
 	<string name="config_title">配置文檔</string>
 	<string name="btn_start">啓動</string>
 	<string name="btn_stop">停止</string>
-	<string name="btn_dns">設定DNS</string><string name="btn_ok">確認</string><string name="gogoc_started">Gogoc 已啓動</string>
-	<string name="gogoc_stopped">Gogoc 已停止</string>
-	<string name="dns_changed">DNS 已設定</string><string name="connection_established">連接已建立</string><string name="binary_installed">Gogoc 可執行文檔已安裝</string><string name="gogoc_already_running">Gogoc 已經在運行</string><string name="gogoc_not_running">Gogoc 沒有在運行</string><string name="cant_read_conf">無法載入配置文檔</string>
 	
 	<string name="conf_not_exists">配置文檔不存在，將使用默認偏好設定</string>
 	

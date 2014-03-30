@@ -7,7 +7,7 @@
         android:title="@string/action_preferences"/>
     <item
         android:id="@+id/set_dns"
-        android:title="@string/btn_dns"/>
+        android:title="@string/set_dns"/>
     <item
         android:id="@+id/action_exit"
         android:title="@string/action_exit"/>

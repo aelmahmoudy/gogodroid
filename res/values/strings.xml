@@ -5,7 +5,7 @@
 	<string name="config_title">Configuration</string>
 	<string name="btn_start">Start</string>
 	<string name="btn_stop">Stop</string>
-	<string name="btn_dns">Set DNS</string>
+	<string name="set_dns">Set DNS</string>
   <string name="btn_ok">OK</string>
 	<string name="dns_changed">DNS Changed.</string>
   <string name="cant_read_conf">Cannot read gogoc.conf</string>

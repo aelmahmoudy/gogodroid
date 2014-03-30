@@ -1,15 +1,14 @@
-* Fix issues with thread:
+* Fix issues with monitorConnection thread:
+  ** I suspect that thread might be hogging the CPU sometimes, any help to fix/enhance this thread is apprecitated.
   ** End thread at stopGogoc() ?
-  ** add boolean parameter for statusConnection to actually check & update lastStatus
 * Notification v4 compat ?
-* background status check after startGogo, user a looper ?
+* background status check after startGogo, use a looper ?
   ** How to specify refreshReceiver only to receive refreshUI broadcast ?
 * End after some user-defined timeout if: isAvailable() && !(ifFailover() || (isConnectedOrConnecting() && !isConnected()))
   -> Use CountDownTimer or AlarmManager
-* Add config params (server,username,password,...) as settings
-  ** implement SharedPreferenes.OnSharedPreferenceChangeListener to call saveConf()
+* Add config params as settings:
+  ** implement SharedPreferenes.OnSharedPreferenceChangeListener to call saveConf() ?
   ** Select advanced settings to add into shared prefs
   ** loadConf can be used to import settings from a file (would require disk access)
-* convert Menu -> ActionBar ?
 * Display tail -f log in main activity ?
 * Check minsdk. Will a compat lib be needed ?

@@ -21,6 +21,6 @@ Requirements:
 How to build:
 1. Change working directory to gogoc-android
 2. Run "ndk-build"
-3. Copy native/libs/armeabi/gogoc binary to res/raw directory of this project
+3. Copy gogoc-android/libs/* to assets/ directory of this project
 4. Import this project to Eclipse (3.5 recommand)
 5. Build project, Android package is in bin/ Directory

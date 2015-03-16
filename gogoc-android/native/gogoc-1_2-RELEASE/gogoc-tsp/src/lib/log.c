@@ -295,14 +295,14 @@ static int LogToSyslog(int VerboseLevel, enum tSeverityLevel SeverityLvl, const 
   switch( SeverityLvl )
   {
     case ELError:
-      pal_syslog(LOG_ERR, buffer); break;
+      pal_syslog(LOG_ERR, "%s", buffer); break;
 
     case ELWarning:
-      pal_syslog(ELWarning, buffer); break;
+      pal_syslog(ELWarning, "%s", buffer); break;
 
     case ELInfo:
     case ELDebug:
-      pal_syslog(LOG_DEBUG, buffer); break;
+      pal_syslog(LOG_DEBUG, "%s", buffer); break;
   }
 
   return 0;

@@ -38,9 +38,7 @@ public final class GogoService extends Service {
   private String lastStatus = "";
   private static final String LOG_TAG = GogoService.class.getName();
   private static final int notifyID = 1;
-  private Notification.Builder mNotifyBuilder = new Notification.Builder(this)
-                                                        .setContentTitle("GogoDroid")
-                                                        .setSmallIcon(R.drawable.gogo6_icon);
+  private Notification.Builder mNotifyBuilder;
 
   Thread monitorConnection;
   Intent refreshIntent;
@@ -191,6 +189,9 @@ public final class GogoService extends Service {
   public void onCreate() {
     super.onCreate();
 
+    mNotifyBuilder = new Notification.Builder(this)
+                                        .setContentTitle("GogoDroid")
+                                        .setSmallIcon(R.drawable.gogo6_icon);
     Log.d(LOG_TAG, "service created");
     ctl = new GogoCtl(this);
     ctl.init();

@@ -1,7 +1,7 @@
 2.1
 ===
   * GogoService: Fix crash in Android 5.1
-    Thanks: Ulf Dittmer <ulf@ulfdittmer.com>
+    Thanks: Ulf Dittmer
   * gogoc: Fix security issue when using pal_syslog functions and the format
     string is not a string literal.
   * Add XXHDPI & XXHDPI icon densities.

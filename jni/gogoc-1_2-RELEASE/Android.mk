@@ -73,3 +73,8 @@ LOCAL_SYSTEM_SHARED_LIBRARIES := libc
 # LOCAL_FORCE_STATIC_EXECUTABLE := true
 LOCAL_MODULE_PATH := $(TARGET_ROOT_OUT_BIN)
 include $(BUILD_EXECUTABLE)
+
+$(NDK_APP_LIBS_OUT)/%/libgogoc_exec.so: $(NDK_APP_LIBS_OUT)/%/gogoc
+	$(call host-mv, $<, $@)
+
+all: $(foreach _abi,$(NDK_APP_ABI),$(NDK_APP_LIBS_OUT)/$(_abi)/libgogoc_exec.so)

@@ -21,8 +21,6 @@ Requirements:
 How to build:
 1. Change working directory to gogoc-android
 2. Run "ndk-build"
-3. Copy gogoc-android/libs/* to libs/ directory of this project, and rename
-   gogoc binaries to 'libgogoc_exec.so'
-4. run: android update project -p .
-5. Build project (ant debug or ant release), Android package is in bin/
+3. run: android update project -p .
+4. Build project (ant debug or ant release), Android package is in bin/
    directory

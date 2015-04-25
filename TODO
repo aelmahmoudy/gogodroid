@@ -12,3 +12,8 @@
   ** loadConf can be used to import settings from a file (would require disk access)
 * Display tail -f log in main activity ?
 * Check minsdk. Will a compat lib be needed ?
+* Use RootCommand library ?
+    https://github.com/dschuermann/superuser-commands
+  Or: use gogoc as a real native library ? 
+    http://stackoverflow.com/questions/24400381/how-to-use-native-library, 
+    https://www3.ntu.edu.sg/home/ehchua/programming/android/Android_NDK.html

@@ -36,19 +36,26 @@ import android.widget.Toast;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Context;
+import android.annotation.SuppressLint;
+import android.os.Build;
 
 import com.googlecode.gogodroid.R;
 
 public class GogoCtl {
+  private static final String EXEC_NAME = "libgogoc_exec.so";
+
+	private String gogocExec;
+	private String gogocConf;
 
   Context context;
+
   public GogoCtl(Context cxt) {
     context = cxt;
+    gogocExec = getGogocExec(context);
+    gogocConf = context.getApplicationInfo().dataDir + File.separator + "files/gogoc.conf";
   }
 
   public void init() {
-		//install gogoc binary
-    updateBinary();
 		// load ipv6 and tun modules
     loadModules();
 		//check whether busybox installed
@@ -69,15 +76,10 @@ public class GogoCtl {
       return;
     }
 
-    if( ! new File(Constants.GOGOC_BIN).exists() ) {
-      updateBinary();
-      return;
-    }
-    
     Thread thread = new Thread() {
       @Override
       public void run() {
-        Utils.runSuCommand(Constants.GOGOC_BIN + " -y -f " + Constants.GOGOC_CONF);
+        Utils.runSuCommand(gogocExec + " -y -f " + gogocConf);
       }
     };
     thread.start();
@@ -121,7 +123,7 @@ public class GogoCtl {
       process.waitFor();
       BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
       while ( (line = stdInput.readLine()) != null ) {
-        if ( line.contains(Constants.GOGOC_BIN) ) {
+        if ( line.contains(gogocExec) ) {
           run = true;
         }
       }
@@ -170,14 +172,14 @@ public class GogoCtl {
 
   public String loadConf() {
     String Config="";
-    File gogoc_conf = new File (Constants.GOGOC_CONF);
+    File gogoc_conf = new File (gogocConf);
 
     if( ! gogoc_conf.exists() ) {
       return Config;
     }
 
     try {
-      BufferedReader in = new BufferedReader(new FileReader(Constants.GOGOC_CONF));
+      BufferedReader in = new BufferedReader(new FileReader(gogocConf));
       String str;
 
       while ((str = in.readLine()) != null) {
@@ -196,7 +198,7 @@ public class GogoCtl {
   public void saveConf(String conf) {
     Writer output = null;
     try {
-      output = new BufferedWriter(new FileWriter(Constants.GOGOC_CONF));
+      output = new BufferedWriter(new FileWriter(gogocConf));
       output.write( conf );
       output.close();
     }
@@ -234,7 +236,7 @@ public class GogoCtl {
 
       BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
       while ( (temp = stdInput.readLine()) != null ) {
-        if ( temp.contains(Constants.GOGOC_BIN) ) {
+        if ( temp.contains(gogocExec) ) {
           String [] cmdArray = temp.split(" +");
           pid = cmdArray[1];
         }
@@ -246,49 +248,6 @@ public class GogoCtl {
     }
     return pid;
   }
-
-  private void updateBinary() {
-    File gogoc_working_folder = new File(Constants.GOGOC_DIR);
-    File gogoc_binary = new File(Constants.GOGOC_BIN);
-
-    // create gogoc working directory
-    if(!gogoc_working_folder.exists())
-    {
-      Log.d(Constants.LOG_TAG, "Creating "+Constants.GOGOC_DIR+" folder");
-      gogoc_working_folder.mkdir();
-    }
-
-    // install gogoc binary
-    if(!gogoc_binary.exists())
-    {
-      String abi = android.os.Build.CPU_ABI.toLowerCase();
-      copyAsset(abi + "/gogoc", Constants.GOGOC_BIN);
-      Log.d(Constants.LOG_TAG, "Gogoc binary installed");
-    }
-
-    // change permission to executable
-    Utils.runCommand("if [ ! -x " + Constants.GOGOC_BIN + " ];then chmod 755 " + Constants.GOGOC_BIN + ";fi");
-  }
-
-	private void copyAsset(String asset, String path)
-	{
-		try {
-			InputStream ins = context.getAssets().open(asset);
-			int size = ins.available();
-
-			// Read the entire resource into a local byte buffer.
-			byte[] buffer = new byte[size];
-			ins.read(buffer);
-			ins.close();
-
-			FileOutputStream fos = new FileOutputStream(path);
-			fos.write(buffer);
-			fos.close();
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
-	}
 
   private void checkBusyBox() {
     String line;
@@ -331,5 +290,19 @@ public class GogoCtl {
     catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  /**
+   * Get full path to lib directory of app
+   * 
+   * @return dir as String
+   */
+  @SuppressLint("NewApi")
+  private static String getGogocExec(Context context) {
+      if (Build.VERSION.SDK_INT >= 9) {
+          return context.getApplicationInfo().nativeLibraryDir + File.separator + EXEC_NAME;
+      } else {
+          return context.getApplicationInfo().dataDir + File.separator + "lib" + File.separator + EXEC_NAME;
+      }
   }
 }
